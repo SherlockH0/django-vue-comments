@@ -1,7 +1,4 @@
-from pathlib import Path
-
 ALLOWED_HOSTS = []
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
 DEBUG = False
 SECRET_KEY = NotImplemented
 
@@ -56,7 +53,7 @@ ASGI_APPLICATION = "backend.project.asgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",  # pyright: ignore
     }
 }
 

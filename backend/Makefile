@@ -18,5 +18,9 @@ runserver:
 superuser:
 	poetry run python -m backend.manage createsuperuser
 
+.PHONY: shell
+shell:
+	poetry run python -m backend.manage shell
+
 .PHONY: update
 update: install migrate ;
