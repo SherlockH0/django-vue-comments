@@ -5,10 +5,10 @@ from split_settings.tools import include, optional
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 
-ENVVAR_SETTINGS_PREFIX = "BACKEND_SETTINGS"
+ENVVAR_SETTINGS_PREFIX = "BACKEND_SETTINGS_"
 
 LOCAL_SETTINGS_PATH = os.getenv(
-    f"{ENVVAR_SETTINGS_PREFIX}LOCAL_SETTINGS_PATH", "local/settings.dev.py"
+    f"{ENVVAR_SETTINGS_PREFIX}LOCAL_SETTINGS_PATH", "backend/local/settings.dev.py"
 )
 
 if not os.path.isabs(LOCAL_SETTINGS_PATH):
