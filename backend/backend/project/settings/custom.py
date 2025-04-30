@@ -1,5 +1,4 @@
-"""
-Settings specific to this application only (no Django or third party settings)
-"""
+"""Settings specific to this application only (no Django or third party settings)."""
 
 IN_DOCKER = False
+ALLOWED_EXTENSIONS = ["gif", "jpg", "png", "txt"]
