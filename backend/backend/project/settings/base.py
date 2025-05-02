@@ -13,6 +13,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "django_filters",
     "backend.comments",
     "backend.attachments",
 ]
@@ -45,7 +46,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "backend.project.wsgi.application"
-ASGI_APPLICATION = "backend.project.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases

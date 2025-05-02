@@ -8,7 +8,7 @@ from .serializers import UploadSerializer
 
 class UploadAttachmentView(APIView):
     serializer_class = UploadSerializer
-    parser_classes = (MultiPartParser,)
+    parser_classes = (FileUploadParser,)
 
     def put(self, request: Request, format=None) -> Response:
         serializer = UploadSerializer(data=request.data)

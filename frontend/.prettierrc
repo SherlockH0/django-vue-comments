@@ -1,0 +1,5 @@
+{
+  "plugins": ["prettier-plugin-vue", "prettier-plugin-tailwindcss"],
+  "pluginSearchDirs": ["."],
+  "overrides": [{ "files": "*.vue", "options": { "parser": "vue" } }]
+}

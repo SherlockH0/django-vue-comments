@@ -45,7 +45,7 @@ class CommentsConsumer(AsyncJsonWebsocketConsumer):
 
         await self.channel_layer.group_send(self.room_group_name, message)
 
-    async def chat_message(self, event: ChatMessage) -> None:
+    async def comments_comment(self, event: ChatMessage) -> None:
         message: Message = {
             "comment": event["comment"],
         }

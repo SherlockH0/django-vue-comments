@@ -1,15 +1,32 @@
-<script setup lang="ts">
+<script setup>
+import { ref, defineModel, reactive } from "vue";
 import Textarea from "./Textarea.vue";
-function sendMessage() {
-  console.log("send");
+
+const emit = defineEmits(["send"]);
+
+const model = reactive({
+  username: "sherlock",
+  email: "dd@ff.com",
+  homepage: "https://",
+  text: "hi!",
+});
+
+function send() {
+  console.log(attachment);
+  emit("send", [{ ...model }, attachment]);
+
+  model.text = "";
+  fileInput.value.value = null;
 }
+
+let attachment = null;
+const fileInput = ref();
 </script>
 
 <template>
-  <button class="btn" onclick="my_modal_1.showModal()">open modal</button>
-  <dialog id="my_modal_1" class="modal">
+  <dialog id="comment_modal" class="modal">
     <div class="modal-box">
-      <form @submit.prevent="sendMessage">
+      <form @submit.prevent="send">
         <fieldset class="fieldset [&>*]:w-full">
           <legend class="fieldset-legend text-lg">Add comment</legend>
 
@@ -24,6 +41,7 @@ function sendMessage() {
             minlength="3"
             maxlength="30"
             title="Only letters, numbers or dash"
+            v-model="model.username"
           />
           <p class="validator-hint hidden">
             Must be 3 to 30 characters
@@ -36,6 +54,7 @@ function sendMessage() {
             placeholder="example@example.com"
             class="input validator"
             name="email"
+            v-model="model.email"
             required
           />
 
@@ -43,19 +62,24 @@ function sendMessage() {
           <input
             type="url"
             placeholder="example.com"
+            value="https://"
             class="input validator"
+            v-model="model.homepage"
             name="homepage"
           />
 
           <label class="label" for="text">Text</label>
-          <Textarea />
+          <Textarea v-model="model.text" />
 
           <label for="attachment" class="label">Attachment</label>
           <input
             name="attachment"
             type="file"
             class="file-input"
+            ref="fileInput"
+            @change="attachment = fileInput.files[0] || null"
             accept="image/png, image/jpeg, image/gif, text/plain"
+            title="Must be an image or a txt file under 100KB"
           />
 
           <div class="modal-action">

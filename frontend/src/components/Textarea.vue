@@ -1,10 +1,10 @@
-<script setup lang="ts">
+<script setup>
 import { useTemplateRef, nextTick, ref } from "vue";
 
-let text = ref("");
+const text = defineModel({ default: "" });
 const textarea = ref(null);
 
-function insertTag(tag: String, extra: String = "") {
+function insertTag(tag, extra = "") {
   const el = textarea.value;
   const start = el.selectionStart;
   const end = el.selectionEnd;
