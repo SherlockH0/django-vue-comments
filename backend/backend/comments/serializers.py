@@ -1,4 +1,6 @@
 # pyright: basic
+import bleach
+from django.conf import settings
 from rest_framework import serializers
 
 from backend.comments.models import Comment
@@ -29,3 +31,6 @@ class CommentSerializer(serializers.ModelSerializer):
             "attachment",
             "children",
         )
+
+    def validate_text(self, value):
+        return bleach.clean(value, tags=settings.ALLOWED_TAGS)

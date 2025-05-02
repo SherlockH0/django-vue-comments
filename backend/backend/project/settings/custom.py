@@ -1,4 +1,16 @@
 """Settings specific to this application only (no Django or third party settings)."""
 
 IN_DOCKER = False
-ALLOWED_EXTENSIONS = ["gif", "jpg", "png", "txt"]
+ALLOWED_MIMETYPES = ["image/png", "image/jpeg", "image/gif", "text/plain"]
+
+# Maximum file upload sizes (in bytes). e3 - KB, e6 - MB, e9 - GB
+ALLOWED_FILE_SIZES = {
+    "image/png": int(5e6),
+    "image/jpeg": int(5e6),
+    "image/gif": int(5e6),
+    "text/plain": int(100e3),
+}
+
+ALLOWED_TAGS = {"a", "i", "strong", "code"}
+
+MAX_IMAGE_DIMENSIONS = 320, 240

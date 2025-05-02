@@ -22,5 +22,9 @@ superuser:
 shell:
 	poetry run python -m backend.manage shell
 
+.PHONY: celery
+celery:
+	poetry run celery -A backend.project worker -l INFO
+
 .PHONY: update
 update: install migrate ;

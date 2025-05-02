@@ -1,3 +1,5 @@
 <template>
-  <button class="btn" onclick="comment_modal.showModal()"><slot></slot></button>
+  <button class="btn btn-primary" onclick="comment_modal.showModal()">
+    <slot></slot>
+  </button>
 </template>

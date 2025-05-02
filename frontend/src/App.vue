@@ -10,9 +10,6 @@ const attachment = ref(null);
 async function uploadFile(file) {
   console.log(file);
   try {
-    if (file.type == "text/plain" && file.size >= 1000 * 100) {
-      throw new Error("Text file too large");
-    }
     const response = await fetch(`${BACKEND_URL}/attachments/upload/`, {
       method: "PUT",
       headers: {
@@ -38,7 +35,8 @@ socket.addEventListener("open", (event) => {
 });
 
 socket.addEventListener("message", (event) => {
-  comments.value.push(JSON.parse(event.data));
+  console.log(event.data);
+  comments.value = [JSON.parse(event.data), ...comments.value];
 });
 
 async function handleMessage(data) {
@@ -54,39 +52,50 @@ async function handleMessage(data) {
 
 async function loadComments(page) {
   try {
-    const response = await fetch(`${BACKEND_URL}/comments/`);
+    const response = await fetch(`${BACKEND_URL}/comments/?page=${page}`);
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);
     }
 
     const json = await response.json();
-    comments.value = comments.value.concat(json.results);
 
-    comments.value.forEach((element) => {
-      console.log(element.email);
-    });
+    comments.value = json.results;
+    pages.value = json.total_pages;
+    currentPage.value = page;
   } catch (error) {
     console.error(error.message);
   }
 }
-loadComments();
+
+const pages = ref(0);
+const currentPage = ref(1);
+
+loadComments(1);
 let comments = ref([]);
 </script>
 
 <template>
-  <CommentButton>New Comment</CommentButton>
-  <InputForm @send="handleMessage" />
-  <ul
-    class="bg-base-100 rounded-box mx-auto mt-6 flex max-w-2xl flex-col shadow"
-  >
-    <Comment v-for="comment in comments" :data="comment" />
-  </ul>
-  <div class="flex w-full items-center">
-    <div class="join mx-auto">
-      <button class="join-item btn">1</button>
-      <button class="join-item btn btn-active">2</button>
-      <button class="join-item btn">3</button>
-      <button class="join-item btn">4</button>
+  <main class="flex max-h-svh flex-col">
+    <div class="bg-base-200 grid place-items-center p-4">
+      <CommentButton>Add Comment</CommentButton>
     </div>
-  </div>
+    <InputForm @send="handleMessage" />
+    <div class="overflow-x-auto">
+      <ul class="list bg-base-100 rounded-box shadow-md">
+        <Comment v-for="comment in comments" :data="comment" />
+      </ul>
+    </div>
+    <div class="bg-base-200 grid place-items-center p-4">
+      <div class="join" v-if="pages > 1">
+        <button
+          class="join-item btn"
+          @click="loadComments(page)"
+          :class="{ 'btn-primary': page == currentPage }"
+          v-for="page in pages"
+        >
+          {{ page }}
+        </button>
+      </div>
+    </div>
+  </main>
 </template>

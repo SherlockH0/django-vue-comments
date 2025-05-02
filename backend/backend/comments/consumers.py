@@ -1,8 +1,11 @@
 from typing import Any, Literal, TypedDict
 
 from asgiref.typing import WebSocketScope
+from channels.consumer import database_sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.layers import BaseChannelLayer
+
+from .services import create_comment
 
 
 class UrlRoute(TypedDict):
@@ -16,11 +19,11 @@ class ChannelsWebSocketScope(WebSocketScope):
 
 class ChatMessage(TypedDict):
     type: Literal["comments.comment"]
-    comment: str
+    comment: dict[str, Any]
 
 
 class Message(TypedDict):
-    comment: str
+    comment: dict[str, Any]
 
 
 class CommentsConsumer(AsyncJsonWebsocketConsumer):
@@ -38,16 +41,14 @@ class CommentsConsumer(AsyncJsonWebsocketConsumer):
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
     async def receive_json(self, content: Message, **kwargs: Any) -> None:
+        data = await database_sync_to_async(create_comment)(content["comment"])
+
         message: ChatMessage = {
             "type": "comments.comment",
-            "comment": content["comment"],
+            "comment": data,
         }
 
         await self.channel_layer.group_send(self.room_group_name, message)
 
     async def comments_comment(self, event: ChatMessage) -> None:
-        message: Message = {
-            "comment": event["comment"],
-        }
-
-        await self.send_json(content=message)
+        await self.send_json(content=event["comment"])

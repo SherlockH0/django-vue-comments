@@ -6,12 +6,13 @@ defineProps({
 </script>
 
 <template>
-  <li :class="{ 'ps-6 pe-0': child }" class="p-4">
+  <li :class="{ 'ps-6 pe-0 last-of-type:pb-0': child }" class="p-4">
     <div
       class="bg-neutral text-neutral-content mb-2 flex items-center gap-4 rounded-xl p-2 px-3"
     >
       <div class="font-bold">{{ data.username }}</div>
-      <div class="text-xs">{{ data.date }}</div>
+      <div class="italic">{{ data.email }}</div>
+      <div class="text-xs">{{ data.datetime_created }}</div>
       <button class="btn btn-square btn-sm btn-ghost ms-auto">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -30,9 +31,7 @@ defineProps({
         </svg>
       </button>
     </div>
-    <p class="p-1">
-      {{ data.text }}
-    </p>
+    <p class="p-1" v-html="data.text"></p>
     <ul class="mt-6 flex flex-col">
       <Comment v-for="child in data.children" :data="child" :child="true" />
     </ul>

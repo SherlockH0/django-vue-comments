@@ -26,3 +26,6 @@ class Comment(models.Model):
     )
     datetime_created = models.DateTimeField(auto_now_add=True)
     datetime_edited = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ("-datetime_created",)
