@@ -1,13 +1,38 @@
-<script setup>
-import { ref } from "vue";
-import InputForm from "./components/InputForm.vue";
+<script setup lang="ts">
 import Comment from "./components/Comment.vue";
 import CommentButton from "./components/CommentButton.vue";
-import { BACKEND_URL, WEBSOCKET_URL } from "./scripts/config.js";
+import Filters from "./components/Filters.vue";
+import InputForm from "./components/InputForm.vue";
+import Toasts from "./components/Toasts.vue";
+import { BACKEND_URL, WEBSOCKET_URL } from "./scripts/config";
+import { emitter } from "./scripts/events.ts";
+import type { CommentObject } from "./scripts/interfaces.ts";
+import { onMounted, provide, ref, useTemplateRef } from "vue";
 
-const attachment = ref(null);
+const comments = ref<CommentObject[]>([]);
+const pages = ref(0);
+const currentPage = ref(1);
 
-async function uploadFile(file) {
+const comment = useTemplateRef("comment");
+
+const socket = new WebSocket(`${WEBSOCKET_URL}/comments`);
+
+const fileErrors = ref<any>(null);
+
+socket.addEventListener("open", () => {
+  console.log("WebSocket connected!");
+});
+
+socket.addEventListener("message", (event) => {
+  const comment: CommentObject = JSON.parse(event.data);
+  if (comment.parent || currentPage.value == 1) {
+    comments.value = [comment, ...comments.value];
+  } else {
+    emitter.emit("toast", { type: "info", message: "New comment." });
+  }
+});
+
+async function uploadFile(file: File): Promise<number | null> {
   console.log(file);
   try {
     const response = await fetch(`${BACKEND_URL}/attachments/upload/`, {
@@ -18,39 +43,36 @@ async function uploadFile(file) {
       body: file,
     });
     if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`);
+      const json = await response.json();
+      fileErrors.value = json.detail;
+      return null;
     }
 
     const json = await response.json();
-    // attachment.value.files = null;
     return json.id;
-  } catch (error) {
-    console.error(error.message);
+  } catch (error: any) {
+    console.log(error.message);
+    return null;
   }
 }
-const socket = new WebSocket(`${WEBSOCKET_URL}/comments`);
 
-socket.addEventListener("open", (event) => {
-  console.log("WebSocket connected!");
-});
+async function handleMessage() {
+  if (!comment.value) return;
 
-socket.addEventListener("message", (event) => {
-  console.log(event.data);
-  comments.value = [JSON.parse(event.data), ...comments.value];
-});
-
-async function handleMessage(data) {
-  let attachment_id = null;
-  console.log(data[1]);
-  if (data[1]) {
-    attachment_id = await uploadFile(data[1]);
+  let attachment_id: number | null = null;
+  if (comment.value.data.attachment) {
+    attachment_id = await uploadFile(comment.value.data.attachment);
+    if (!attachment_id) {
+      return;
+    }
   }
-  socket.send(
-    JSON.stringify({ comment: { ...data[0], attachment: attachment_id } }),
-  );
+  const data = JSON.stringify({ comment: comment.value?.data });
+  socket.send(data);
+  comment.value.data.text = "";
+  comment.value.data.attachment = null;
 }
 
-async function loadComments(page) {
+async function loadComments(page: number) {
   try {
     const response = await fetch(`${BACKEND_URL}/comments/?page=${page}`);
     if (!response.ok) {
@@ -62,27 +84,35 @@ async function loadComments(page) {
     comments.value = json.results;
     pages.value = json.total_pages;
     currentPage.value = page;
-  } catch (error) {
+  } catch (error: any) {
     console.error(error.message);
   }
 }
 
-const pages = ref(0);
-const currentPage = ref(1);
+onMounted(() => {
+  loadComments(1);
+});
 
-loadComments(1);
-let comments = ref([]);
+function cleanFileErrors() {
+  fileErrors.value = null;
+}
+
+provide("fileErrors", {
+  fileErrors,
+  cleanFileErrors,
+});
 </script>
 
 <template>
   <main class="flex max-h-svh flex-col">
     <div class="bg-base-200 grid place-items-center p-4">
-      <CommentButton>Add Comment</CommentButton>
+      <CommentButton class="btn btn-primary">Add Comment</CommentButton>
+      <Filters />
     </div>
-    <InputForm @send="handleMessage" />
+    <InputForm @send="handleMessage" ref="comment" />
     <div class="overflow-x-auto">
       <ul class="list bg-base-100 rounded-box shadow-md">
-        <Comment v-for="comment in comments" :data="comment" />
+        <Comment v-for="data in comments" :key="data.id" :data />
       </ul>
     </div>
     <div class="bg-base-200 grid place-items-center p-4">
@@ -97,5 +127,6 @@ let comments = ref([]);
         </button>
       </div>
     </div>
+    <Toasts />
   </main>
 </template>

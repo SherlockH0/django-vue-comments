@@ -6,6 +6,7 @@ from django.conf import settings
 from rest_framework import serializers
 
 from backend.attachments.models import Attachment
+from backend.attachments.tasks import process_attachment
 
 
 class UploadSerializer(serializers.ModelSerializer):
@@ -22,13 +23,19 @@ class UploadSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {
                     "detail": f"Wrong file type. "
-                    f"Allowed mime types: {settings.ALLOWED_MIMETYPES}"
+                    f"Allowed file types: {", ".join(settings.ALLOWED_MIMETYPES)}"
                 }
             )
 
         if filetype in settings.ALLOWED_FILE_SIZES:
             if attrs["file"].size > settings.ALLOWED_FILE_SIZES[filetype]:
                 raise serializers.ValidationError({"detail": "File too large."})
+
         attrs["filetype"] = filetype
         attrs["is_image"] = filetype.startswith("image")
         return attrs
+
+    def save(self, **kwargs: Any) -> Any:
+        attachment = super().save(**kwargs)
+        process_attachment.delay(attachment.id)
+        return attachment

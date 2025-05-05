@@ -14,4 +14,5 @@ class UploadAttachmentView(APIView):
         serializer = UploadSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         attachment = serializer.save()
+
         return Response(status=201, data={"id": attachment.pk})

@@ -1,7 +1,17 @@
-<script setup>
-defineProps({
-  data: Object,
-  child: Boolean,
+<script setup lang="ts">
+import type { CommentObject } from "../scripts/interfaces";
+import CommentButton from "./CommentButton.vue";
+import { format } from "date-fns";
+import { computed } from "vue";
+
+const props = defineProps<{
+  data: CommentObject;
+  child?: Boolean;
+}>();
+
+const date = computed(() => {
+  const date = new Date(props.data.datetime_created);
+  return format(date, "kk:mm, dd.MM.yy");
 });
 </script>
 
@@ -12,8 +22,13 @@ defineProps({
     >
       <div class="font-bold">{{ data.username }}</div>
       <div class="italic">{{ data.email }}</div>
-      <div class="text-xs">{{ data.datetime_created }}</div>
-      <button class="btn btn-square btn-sm btn-ghost ms-auto">
+      <div class="text-xs">
+        {{ date }}
+      </div>
+      <CommentButton
+        class="btn btn-square btn-sm btn-ghost ms-auto"
+        :parent="data"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"
@@ -29,11 +44,17 @@ defineProps({
             d="M7 13L3 9m0 0l4-4M3 9h13a5 5 0 0 1 0 10h-5"
           />
         </svg>
-      </button>
+      </CommentButton>
     </div>
     <p class="p-1" v-html="data.text"></p>
     <ul class="mt-6 flex flex-col">
-      <Comment v-for="child in data.children" :data="child" :child="true" />
+      <Comment
+        v-for="child in data.children"
+        :key="child.id"
+        :data="child"
+        :parent="data.id"
+        :child="true"
+      />
     </ul>
   </li>
 </template>

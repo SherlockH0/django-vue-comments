@@ -1,11 +1,14 @@
-<script setup>
-import { useTemplateRef, nextTick, ref } from "vue";
+<script setup lang="ts">
+import { useTemplateRef, nextTick } from "vue";
 
 const text = defineModel({ default: "" });
-const textarea = ref(null);
+const textarea = useTemplateRef("textarea");
 
-function insertTag(tag, extra = "") {
+function insertTag(tag: string, extra: string = "") {
   const el = textarea.value;
+
+  if (!el) return;
+
   const start = el.selectionStart;
   const end = el.selectionEnd;
 
@@ -18,7 +21,6 @@ function insertTag(tag, extra = "") {
 
   text.value = before + opening + selected + closing + after;
 
-  // Reselect the inserted text
   nextTick(() => {
     el.focus();
     el.setSelectionRange(start + opening.length, end + opening.length);

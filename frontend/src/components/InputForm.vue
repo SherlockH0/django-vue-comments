@@ -1,34 +1,52 @@
-<script setup>
-import { ref, defineModel, reactive } from "vue";
+<script setup lang="ts">
+import { emitter } from "../scripts/events";
+import type { CommentObject, CommentRequest } from "../scripts/interfaces";
+import FileInput from "./FileInput.vue";
 import Textarea from "./Textarea.vue";
+import { reactive, ref, useTemplateRef, watch } from "vue";
 
 const emit = defineEmits(["send"]);
+const comment_modal = useTemplateRef<HTMLDialogElement>("modal");
+const parent = ref<CommentObject | null>(null);
 
-const model = reactive({
-  username: "sherlock",
-  email: "dd@ff.com",
-  homepage: "https://",
-  text: "hi!",
+const data = reactive<CommentRequest>({
+  username: "Gandalf",
+  email: "gandalf@gmail.com",
+  text: "You shall not pass!!!",
 });
 
 function send() {
-  console.log(attachment);
-  emit("send", [{ ...model }, attachment]);
-
-  model.text = "";
-  fileInput.value.value = null;
+  emit("send");
 }
 
-let attachment = null;
-const fileInput = ref();
+watch(parent, (newValue) => {
+  data.parent = newValue?.id;
+});
+
+emitter.on("new_comment", (event) => {
+  parent.value = event.parent || null;
+  comment_modal.value?.showModal();
+});
+
+defineExpose({
+  data,
+});
 </script>
 
 <template>
-  <dialog id="comment_modal" class="modal">
+  <dialog ref="modal" class="modal">
     <div class="modal-box">
       <form @submit.prevent="send">
         <fieldset class="fieldset [&>*]:w-full">
-          <legend class="fieldset-legend text-lg">Add comment</legend>
+          <legend class="fieldset-legend text-lg" v-if="!parent">
+            Add comment
+          </legend>
+          <legend class="fieldset-legend text-lg" v-else>
+            <span>
+              Reply to <i>{{ parent.username }}</i>
+            </span>
+          </legend>
+          <p v-if="parent" class="truncate">{{ parent.text }}</p>
 
           <label class="label" for="username">Username</label>
           <input
@@ -41,7 +59,7 @@ const fileInput = ref();
             minlength="3"
             maxlength="30"
             title="Only letters, numbers or dash"
-            v-model="model.username"
+            v-model="data.username"
           />
           <p class="validator-hint hidden">
             Must be 3 to 30 characters
@@ -54,33 +72,24 @@ const fileInput = ref();
             placeholder="example@example.com"
             class="input validator"
             name="email"
-            v-model="model.email"
+            v-model="data.email"
             required
           />
 
           <label for="homepage" class="label">Homepage</label>
           <input
             type="url"
-            placeholder="example.com"
-            value="https://"
+            placeholder="https://"
             class="input validator"
-            v-model="model.homepage"
+            v-model="data.homepage"
             name="homepage"
           />
 
           <label class="label" for="text">Text</label>
-          <Textarea v-model="model.text" />
+          <Textarea v-model="data.text" />
 
           <label for="attachment" class="label">Attachment</label>
-          <input
-            name="attachment"
-            type="file"
-            class="file-input"
-            ref="fileInput"
-            @change="attachment = fileInput.files[0] || null"
-            accept="image/png, image/jpeg, image/gif, text/plain"
-            title="Must be an image or a txt file under 100KB"
-          />
+          <FileInput v-model="data.attachment" />
 
           <div class="modal-action">
             <button class="btn" type="submit">Send</button>
