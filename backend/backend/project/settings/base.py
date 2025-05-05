@@ -102,6 +102,12 @@ MEDIA_ROOT = BASE_DIR / "media"  # type: ignore
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-FILE_UPLOAD_HANDLERS = [
-    "django.core.files.uploadhandler.TemporaryFileUploadHandler",
-]
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    }
+}

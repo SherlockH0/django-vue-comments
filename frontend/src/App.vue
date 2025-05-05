@@ -76,6 +76,9 @@ async function loadComments(page: number, filter: string = "") {
   try {
     const response = await fetch(
       `${BACKEND_URL}/comments/?page=${page}&ordering=${filter}`,
+      {
+        cache: "no-cache",
+      },
     );
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);

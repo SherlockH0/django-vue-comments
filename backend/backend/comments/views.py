@@ -1,3 +1,8 @@
+from time import sleep
+
+from django.conf import settings
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import pagination
 from rest_framework.filters import OrderingFilter
@@ -30,3 +35,10 @@ class CommentListView(ListAPIView):
     pagination_class = CustomPagination
     filterset_fields = ("username", "email", "datetime_created")
     ordering_fields = ("username", "email", "datetime_created")
+
+    @method_decorator(
+        cache_page(settings.COMMENT_LIST_CACHE_TIME, key_prefix="comment_list")
+    )
+    def get(self, request, format=None):
+        sleep(2)
+        return super().get(request, format)
