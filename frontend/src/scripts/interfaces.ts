@@ -30,3 +30,9 @@ export type Events = {
   toast: ToastEvent;
   new_comment: NewCommentEvent;
 };
+
+export interface FilterInterface {
+  name: "username" | "email" | "datetime_created";
+  display: string;
+  active: boolean;
+}

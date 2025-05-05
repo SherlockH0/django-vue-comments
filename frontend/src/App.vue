@@ -72,9 +72,11 @@ async function handleMessage() {
   comment.value.data.attachment = null;
 }
 
-async function loadComments(page: number) {
+async function loadComments(page: number, filter: string = "") {
   try {
-    const response = await fetch(`${BACKEND_URL}/comments/?page=${page}`);
+    const response = await fetch(
+      `${BACKEND_URL}/comments/?page=${page}&ordering=${filter}`,
+    );
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);
     }
@@ -89,8 +91,15 @@ async function loadComments(page: number) {
   }
 }
 
+function updateComments(filter: string | null, reversed: boolean) {
+  loadComments(
+    currentPage.value,
+    filter ? `${reversed ? "-" : ""}${filter}` : "",
+  );
+}
+
 onMounted(() => {
-  loadComments(1);
+  loadComments(currentPage.value);
 });
 
 function cleanFileErrors() {
@@ -105,9 +114,9 @@ provide("fileErrors", {
 
 <template>
   <main class="flex max-h-svh flex-col">
-    <div class="bg-base-200 grid place-items-center p-4">
+    <div class="bg-base-200 grid place-items-center p-4 space-y-4">
       <CommentButton class="btn btn-primary">Add Comment</CommentButton>
-      <Filters />
+      <Filters @change="updateComments" />
     </div>
     <InputForm @send="handleMessage" ref="comment" />
     <div class="overflow-x-auto">

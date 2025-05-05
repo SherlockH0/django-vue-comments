@@ -1,6 +1,6 @@
 <script setup lang="ts">
-const props = defineProps<{
-  name: string;
+defineProps<{
+  display: string;
 }>();
 const emit = defineEmits(["activate"]);
 
@@ -9,7 +9,7 @@ const reversed = defineModel<boolean>("reversed", { default: false });
 
 function changeState() {
   if (!active.value) {
-    emit("activate", props.name);
+    emit("activate");
     active.value = true;
   } else if (!reversed.value) {
     reversed.value = true;
@@ -26,26 +26,9 @@ function changeState() {
       @click="changeState()"
       :class="{ 'btn-neutral': active }"
     >
-      <div class="capitalize">{{ name }}</div>
+      <div>{{ display }}</div>
       <template v-if="active">
         <div v-if="reversed">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill="none"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m9 13l3-3l3 3"
-            />
-          </svg>
-        </div>
-        <div v-else>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -62,10 +45,27 @@ function changeState() {
             />
           </svg>
         </div>
+        <div v-else>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m9 13l3-3l3 3"
+            />
+          </svg>
+        </div>
       </template>
     </button>
     <button
-      class="btn join-item btn-square"
+      class="btn join-item btn-square btn-neutral"
       v-if="active"
       @click="active = false"
     >

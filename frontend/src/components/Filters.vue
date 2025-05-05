@@ -1,18 +1,46 @@
 <script setup lang="ts">
+import type { FilterInterface } from "../scripts/interfaces";
 import Filter from "./Filter.vue";
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
 
-const filter_reverse = ref<boolean>(false);
-const filter_on = ref<boolean>(false);
+const reversed = ref<boolean>(false);
+const emit = defineEmits<{
+  change: [filter: string | null, reversed: boolean];
+}>();
 
-const filter = ref<"username" | "email" | "date" | null>("username");
-// let filters = [{ name, active, reversed }];
+function toggleFilters(f: FilterInterface) {
+  filters.value
+    .filter((filter) => filter.name !== f.name)
+    .forEach((filter) => {
+      filter.active = false;
+      reversed.value = false;
+    });
+}
+
+const filters = ref<FilterInterface[]>([
+  { display: "Username", name: "username", active: false },
+  { display: "Email", name: "email", active: false },
+  { display: "Date", name: "datetime_created", active: false },
+]);
+
+watchEffect(() => {
+  console.log("hi");
+  emit(
+    "change",
+    filters.value.filter((filter) => filter.active)[0]?.name || null,
+    reversed.value,
+  );
+});
 </script>
 <template>
   <div class="flex w-full gap-4">
-    <div class="flex items-center font-bold">Filters:</div>
-    <Filter :name="'username'" />
-    <Filter :name="'email'" />
-    <Filter :name="'date'" />
+    <div class="flex items-center font-bold">Sort by:</div>
+    <Filter
+      v-for="filter in filters"
+      :display="filter.display"
+      v-model:active="filter.active"
+      v-model:reversed="reversed"
+      @activate="toggleFilters(filter)"
+    />
   </div>
 </template>
