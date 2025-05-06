@@ -1,4 +1,6 @@
 # pyright: basic
+import os
+
 import bleach
 from django.conf import settings
 from rest_framework import serializers
@@ -11,14 +13,8 @@ class ChildrenListingField(serializers.RelatedField):
         return CommentSerializer(value).data
 
 
-class AttachmentField(serializers.RelatedField):
-    def to_representation(self, value):
-        return value.file.url
-
-
 class CommentSerializer(serializers.ModelSerializer):
     children = ChildrenListingField(many=True, read_only=True)
-    attachment = AttachmentField(read_only=True)
 
     class Meta:
         model = Comment
@@ -36,3 +32,16 @@ class CommentSerializer(serializers.ModelSerializer):
 
     def validate_text(self, value):
         return bleach.clean(value, tags=settings.ALLOWED_TAGS)
+
+
+class AttachmentField(serializers.RelatedField):
+    def to_representation(self, value):
+        return {
+            "url": value.file.url,
+            "image": value.is_image,
+            "name": os.path.basename(value.file.name),
+        }
+
+
+class CommentDisplaySerializer(CommentSerializer):
+    attachment = AttachmentField(read_only=True)

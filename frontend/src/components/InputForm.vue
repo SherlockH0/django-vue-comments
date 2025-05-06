@@ -47,7 +47,7 @@ defineExpose({
               Reply to <i>{{ parent.username }}</i>
             </span>
           </legend>
-          <p v-if="parent" class="truncate">{{ parent.text }}</p>
+          <p v-if="parent" v-html="parent.text" class="truncate"></p>
 
           <label class="label" for="username">Username</label>
           <input

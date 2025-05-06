@@ -1,12 +1,16 @@
 export interface CommentObject {
   id: number;
-  parent?: number;
+  parent: number | null;
   username: string;
   email: string;
   text: string;
   datetime_created: string;
   datetime_edited: string;
-  attachment: string | null;
+  attachment: {
+    url: string;
+    image: boolean;
+    name: string;
+  } | null;
   children: CommentObject[];
 }
 export interface CommentRequest {

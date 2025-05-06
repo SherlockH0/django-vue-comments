@@ -8,7 +8,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 
 from backend.comments.models import Comment
-from backend.comments.serializers import CommentSerializer
+from backend.comments.serializers import CommentDisplaySerializer
 
 
 class CustomPagination(pagination.PageNumberPagination):
@@ -28,7 +28,7 @@ class CustomPagination(pagination.PageNumberPagination):
 
 class CommentListView(ListAPIView):
     queryset = Comment.objects.filter(parent=None)
-    serializer_class = CommentSerializer
+    serializer_class = CommentDisplaySerializer
     filter_backends = (OrderingFilter, DjangoFilterBackend)
     pagination_class = CustomPagination
     filterset_fields = ("username", "email", "datetime_created")

@@ -5,7 +5,6 @@ import Filters from "./components/Filters.vue";
 import InputForm from "./components/InputForm.vue";
 import Toasts from "./components/Toasts.vue";
 import { BACKEND_URL, WEBSOCKET_URL } from "./scripts/config";
-import { emitter } from "./scripts/events.ts";
 import type { CommentObject } from "./scripts/interfaces.ts";
 import { onMounted, provide, ref, useTemplateRef } from "vue";
 
@@ -23,17 +22,30 @@ socket.addEventListener("open", () => {
   console.log("WebSocket connected!");
 });
 
+function insertComment(tree: CommentObject[], newComment: CommentObject) {
+  for (const node of tree) {
+    if (node.id === newComment.parent) {
+      node.children.unshift(newComment);
+      return true;
+    } else if (node.children.length) {
+      if (insertComment(node.children, newComment)) return true;
+    }
+  }
+  return false;
+}
+
 socket.addEventListener("message", (event) => {
   const comment: CommentObject = JSON.parse(event.data);
-  if (comment.parent || currentPage.value == 1) {
-    comments.value = [comment, ...comments.value];
+  console.log(comment.parent === null);
+  if (comment.parent === null) {
+    comments.value.unshift(comment);
+    console.log("null");
   } else {
-    emitter.emit("toast", { type: "info", message: "New comment." });
+    insertComment(comments.value, comment);
   }
 });
 
 async function uploadFile(file: File): Promise<number | null> {
-  console.log(file);
   try {
     const response = await fetch(`${BACKEND_URL}/attachments/upload/`, {
       method: "PUT",
@@ -66,7 +78,10 @@ async function handleMessage() {
       return;
     }
   }
-  const data = JSON.stringify({ comment: comment.value?.data });
+  const data = JSON.stringify({
+    comment: { ...comment.value.data, attachment: attachment_id },
+  });
+  console.log(data);
   socket.send(data);
   comment.value.data.text = "";
   comment.value.data.attachment = null;

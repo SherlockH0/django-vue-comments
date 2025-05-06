@@ -24,7 +24,6 @@ const filters = ref<FilterInterface[]>([
 ]);
 
 watchEffect(() => {
-  console.log("hi");
   emit(
     "change",
     filters.value.filter((filter) => filter.active)[0]?.name || null,
