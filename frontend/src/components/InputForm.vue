@@ -29,6 +29,12 @@ emitter.on("new_comment", (event) => {
   comment_modal.value?.showModal();
 });
 
+emitter.on("clean_form", () => {
+  comment_modal.value?.close();
+  data.text = "";
+  data.attachment = null;
+});
+
 defineExpose({
   data,
 });

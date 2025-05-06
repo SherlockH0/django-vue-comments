@@ -5,6 +5,7 @@ import Filters from "./components/Filters.vue";
 import InputForm from "./components/InputForm.vue";
 import Toasts from "./components/Toasts.vue";
 import { BACKEND_URL, WEBSOCKET_URL } from "./scripts/config";
+import { emitter } from "./scripts/events.ts";
 import type { CommentObject } from "./scripts/interfaces.ts";
 import { onMounted, provide, ref, useTemplateRef } from "vue";
 
@@ -81,10 +82,8 @@ async function handleMessage() {
   const data = JSON.stringify({
     comment: { ...comment.value.data, attachment: attachment_id },
   });
-  console.log(data);
   socket.send(data);
-  comment.value.data.text = "";
-  comment.value.data.attachment = null;
+  emitter.emit("clean_form", null);
 }
 
 async function loadComments(page: number, filter: string = "") {
@@ -138,8 +137,8 @@ provide("fileErrors", {
     </div>
     <InputForm @send="handleMessage" ref="comment" />
     <div class="overflow-x-auto">
-      <ul class="list bg-base-100 rounded-box shadow-md">
-        <Comment v-for="data in comments" :key="data.id" :data />
+      <ul class="list bg-base-100 rounded-box shadow-md p-6">
+        <Comment v-for="data in comments" :key="data.id" :data :depth="0" />
       </ul>
     </div>
     <div class="bg-base-200 grid place-items-center p-4">

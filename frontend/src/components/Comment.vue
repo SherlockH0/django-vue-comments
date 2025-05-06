@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { BACKEND_URL } from "../scripts/config";
 import type { CommentObject } from "../scripts/interfaces";
 import CommentButton from "./CommentButton.vue";
 import { format } from "date-fns";
@@ -8,14 +7,11 @@ import VueEasyLightbox from "vue-easy-lightbox";
 
 const props = defineProps<{
   data: CommentObject;
-  child?: Boolean;
+  depth: number;
 }>();
 
 const lightboxVisible = ref<boolean>(false);
-
-function absoluteUrl(url: string): string {
-  return `${BACKEND_URL}${url}`;
-}
+const open = ref<boolean>(props.depth < 3);
 
 function onLightboxShow() {
   lightboxVisible.value = true;
@@ -28,7 +24,7 @@ const date = computed(() => {
 </script>
 
 <template>
-  <li :class="{ 'ps-6 pe-0 last-of-type:pb-0': child }" class="p-4">
+  <li :class="{ 'ps-6 pe-0 last-of-type:pb-0': depth > 0 }" class="p-4">
     <div
       class="bg-neutral text-neutral-content mb-2 flex items-center gap-4 rounded-xl p-2 px-3"
     >
@@ -37,33 +33,74 @@ const date = computed(() => {
       <div class="text-xs">
         {{ date }}
       </div>
-      <CommentButton
-        class="btn btn-square btn-sm btn-ghost ms-auto"
-        :parent="data"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
+      <div class="ms-auto">
+        <button
+          class="btn btn-square btn-sm btn-ghost"
+          :class="{ 'btn-active': !open }"
+          v-if="data.children.length !== 0"
+          @click="open = !open"
         >
-          <path
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M7 13L3 9m0 0l4-4M3 9h13a5 5 0 0 1 0 10h-5"
-          />
-        </svg>
-      </CommentButton>
+          <svg
+            v-if="open"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m8 14l4-4l4 4"
+            />
+          </svg>
+          <svg
+            v-else
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m16 10l-4 4l-4-4"
+            />
+          </svg>
+        </button>
+        <CommentButton
+          class="btn btn-square btn-sm btn-ghost ms-3"
+          :parent="data"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M7 13L3 9m0 0l4-4M3 9h13a5 5 0 0 1 0 10h-5"
+            />
+          </svg>
+        </CommentButton>
+      </div>
     </div>
     <p class="p-1" v-html="data.text"></p>
     <template v-if="data.attachment">
       <template v-if="data.attachment.image">
         <vue-easy-lightbox
           :visible="lightboxVisible"
-          :imgs="absoluteUrl(data.attachment?.url)"
+          :imgs="data.attachment.url"
           @hide="lightboxVisible = false"
         >
           <template v-slot:close-btn="{ close }">
@@ -181,12 +218,12 @@ const date = computed(() => {
         </vue-easy-lightbox>
         <div class="avatar cursor-pointer" @click="onLightboxShow">
           <div class="w-24 rounded">
-            <img :src="absoluteUrl(data.attachment.url)" />
+            <img :src="data.attachment.url" />
           </div>
         </div>
       </template>
       <template v-else>
-        <a role="button" :href="absoluteUrl(data.attachment.url)" class="btn">
+        <a role="button" :href="data.attachment.url" class="btn">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -206,13 +243,14 @@ const date = computed(() => {
         </a>
       </template>
     </template>
-    <ul class="mt-6 flex flex-col">
+    <ul v-show="open" class="mt-6 flex flex-col">
       <Comment
         v-for="child in data.children"
         :key="child.id"
         :data="child"
         :parent="data.id"
         :child="true"
+        :depth="depth + 1"
       />
     </ul>
   </li>

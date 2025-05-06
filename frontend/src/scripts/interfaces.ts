@@ -30,9 +30,11 @@ export type ToastEvent = {
 export type NewCommentEvent = {
   parent?: CommentObject;
 };
+
 export type Events = {
   toast: ToastEvent;
   new_comment: NewCommentEvent;
+  clean_form: null;
 };
 
 export interface FilterInterface {

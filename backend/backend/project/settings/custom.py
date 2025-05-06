@@ -10,6 +10,11 @@ ALLOWED_FILE_SIZES = {
     "image/gif": int(2.4e6),
     "text/plain": int(100e3),
 }
+POST_PROCESSORS = {
+    "image/png": "backend.attachments.post_processors.ImagePostProcessor",
+    "image/jpeg": "backend.attachments.post_processors.ImagePostProcessor",
+    "image/gif": "backend.attachments.post_processors.ImagePostProcessor",
+}
 
 ALLOWED_TAGS = {"a", "i", "strong", "code"}
 
