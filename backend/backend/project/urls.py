@@ -5,8 +5,8 @@ from django.urls import include, path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/comments/", include("backend.comments.urls")),
-    path("api/attachments/", include("backend.attachments.urls")),
+    path("comments/", include("backend.comments.urls")),
+    path("attachments/", include("backend.attachments.urls")),
 ]
 
 if settings.DEBUG:

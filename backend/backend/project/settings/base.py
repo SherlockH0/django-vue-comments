@@ -52,8 +52,12 @@ WSGI_APPLICATION = "backend.project.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",  # pyright: ignore
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "dzencode",
+        "USER": "dzencode",
+        "PASSWORD": "dzencode",
+        "HOST": "127.0.0.1",
+        "PORT": "5432",
     }
 }
 

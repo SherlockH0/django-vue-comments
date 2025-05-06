@@ -26,5 +26,9 @@ shell:
 celery:
 	poetry run celery -A backend.project worker -l INFO
 
+.PHONY: deps
+deps:
+	docker compose up
+
 .PHONY: update
 update: install migrate ;

@@ -13,6 +13,7 @@ const data = reactive<CommentRequest>({
   username: "Gandalf",
   email: "gandalf@gmail.com",
   text: "You shall not pass!!!",
+  attachment: null,
 });
 
 function send() {

@@ -1,5 +1,3 @@
-from time import sleep
-
 from django.conf import settings
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -40,5 +38,4 @@ class CommentListView(ListAPIView):
         cache_page(settings.COMMENT_LIST_CACHE_TIME, key_prefix="comment_list")
     )
     def get(self, request, format=None):
-        sleep(2)
         return super().get(request, format)

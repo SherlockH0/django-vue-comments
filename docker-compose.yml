@@ -1,0 +1,41 @@
+services:
+  nginx:
+    build:
+      target: nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./backend/media/:/usr/share/nginx/media
+    ports:
+      - 80:80
+    depends_on:
+      - backend
+  backend:
+    build: ./backend/
+    volumes:
+      - ./backend/:/usr/src/app
+    command: ./scripts/run_django.sh
+    depends_on:
+      - db
+      - broker
+  celery:
+    build: ./backend/
+    volumes:
+      - ./backend/:/usr/src/app
+    command: ./scripts/run_celery.sh
+    depends_on:
+      - db
+      - broker
+  db:
+    image: postgres:17.4-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: dzencode
+      POSTGRES_USER: dzencode
+      POSTGRES_PASSWORD: dzencode
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+  broker:
+    image: redis:8.0-alpine
+volumes:
+  postgres-data:
+    driver: local

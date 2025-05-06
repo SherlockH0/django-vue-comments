@@ -1,2 +1,2 @@
-export const BACKEND_URL = "http://localhost:8000/api";
-export const WEBSOCKET_URL = "ws://localhost:8000/ws";
+export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+export const WEBSOCKET_URL = import.meta.env.VITE_WEBSOCKET_URL;
