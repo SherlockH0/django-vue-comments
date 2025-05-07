@@ -20,3 +20,5 @@ ALLOWED_TAGS = {"a", "i", "strong", "code"}
 
 MAX_IMAGE_DIMENSIONS = 320, 240
 COMMENT_LIST_CACHE_TIME = 60 * 15
+
+WEBSITE_URI = "http://localhost:8000"

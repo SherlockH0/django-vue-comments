@@ -36,8 +36,9 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class AttachmentField(serializers.RelatedField):
     def to_representation(self, value):
+        website_uri = settings.WEBSITE_URI
         return {
-            "url": value.file.url,
+            "url": website_uri + value.file.url,
             "image": value.is_image,
             "name": os.path.basename(value.file.name),
         }
