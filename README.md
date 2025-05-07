@@ -1,9 +1,5 @@
 # django-vue-comments 💬
 Comments SPR with Django on backend and Vue on frontend
-# Blog API 
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/SherlockH0/Blog-API/pr.yml?style=flat-square&label=tests)
-
-This is a simple blog API with AI moderation features, written in python with Django and Django Ninja.
 
 ##### Table of Contents
 
