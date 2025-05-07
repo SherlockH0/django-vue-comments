@@ -6,7 +6,7 @@ import InputForm from "./components/InputForm.vue";
 import Toasts from "./components/Toasts.vue";
 import { BACKEND_URL, WEBSOCKET_URL } from "./scripts/config";
 import { emitter } from "./scripts/events.ts";
-import type { CommentObject } from "./scripts/interfaces.ts";
+import type { CommentObject, SocketEvent } from "./scripts/interfaces.ts";
 import { onMounted, provide, ref, useTemplateRef } from "vue";
 
 const comments = ref<CommentObject[]>([]);
@@ -18,6 +18,7 @@ const comment = useTemplateRef("comment");
 const socket = new WebSocket(`${WEBSOCKET_URL}/comments`);
 
 const fileErrors = ref<any>(null);
+const formError = ref<string | null>();
 
 socket.addEventListener("open", () => {
   console.log("WebSocket connected!");
@@ -36,13 +37,20 @@ function insertComment(tree: CommentObject[], newComment: CommentObject) {
 }
 
 socket.addEventListener("message", (event) => {
-  const comment: CommentObject = JSON.parse(event.data);
-  console.log(comment.parent === null);
-  if (comment.parent === null) {
-    comments.value.unshift(comment);
-    console.log("null");
-  } else {
-    insertComment(comments.value, comment);
+  const response: SocketEvent = JSON.parse(event.data);
+  formError.value = null;
+  switch (response.type) {
+    case "comment":
+      if (response.body.parent === null) {
+        comments.value.unshift(response.body);
+      } else {
+        insertComment(comments.value, response.body);
+      }
+      emitter.emit("clean_form", null);
+      break;
+    case "error":
+      formError.value = response.body.error;
+      break;
   }
 });
 
@@ -83,7 +91,6 @@ async function handleMessage() {
     comment: { ...comment.value.data, attachment: attachment_id },
   });
   socket.send(data);
-  emitter.emit("clean_form", null);
 }
 
 async function loadComments(page: number, filter: string = "") {
@@ -127,6 +134,7 @@ provide("fileErrors", {
   fileErrors,
   cleanFileErrors,
 });
+provide("formError", formError);
 </script>
 
 <template>

@@ -1,8 +1,10 @@
-ALLOWED_HOSTS = []
+"""Core Django settings (no third party settings)."""
+
+ALLOWED_HOSTS = ["localhost"]
+CORS_ALLOWED_ORIGINS = ["http://localhost"]
 DEBUG = False
 SECRET_KEY = NotImplemented
 
-# Application definition
 
 INSTALLED_APPS = [
     "daphne",
@@ -12,13 +14,17 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "captcha",
+    "corsheaders",
     "rest_framework",
     "django_filters",
     "backend.comments",
     "backend.attachments",
 ]
 
+
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -28,7 +34,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "backend.project.urls"
 
 TEMPLATES = [
     {
@@ -45,10 +50,11 @@ TEMPLATES = [
     },
 ]
 
+ROOT_URLCONF = "backend.project.urls"
 WSGI_APPLICATION = "backend.project.wsgi.application"
 
+
 # Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
     "default": {
@@ -63,7 +69,6 @@ DATABASES = {
 
 
 # Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -82,29 +87,27 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"  # type: ignore
 
+
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# Cache
 
 CACHES = {
     "default": {

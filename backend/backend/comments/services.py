@@ -1,8 +1,11 @@
-from backend.comments.serializers import CommentDisplaySerializer, CommentSerializer
+from backend.comments.serializers import (
+    ComentCreateSerializer,
+    CommentDisplaySerializer,
+)
 
 
 def create_comment(data: dict) -> dict:
-    serializer = CommentSerializer(data=data)
+    serializer = ComentCreateSerializer(data=data)
     serializer.is_valid(raise_exception=True)
     instance = serializer.save()
     return CommentDisplaySerializer(instance).data

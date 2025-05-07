@@ -16,7 +16,7 @@ POST_PROCESSORS = {
     "image/gif": "backend.attachments.post_processors.ImagePostProcessor",
 }
 
-ALLOWED_TAGS = {"a", "i", "strong", "code"}
+ALLOWED_TAGS = {"a", "i", "strong", "code", "br"}
 
 MAX_IMAGE_DIMENSIONS = 320, 240
 COMMENT_LIST_CACHE_TIME = 60 * 15

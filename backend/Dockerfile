@@ -15,10 +15,15 @@ ENV BACKEND_SETTING_DATABASES '{"default":{"HOST":"db"}}'
 ENV BACKEND_SETTING_LOCAL_SETTINGS_PATH "local/settings.dev.py"
 ENV BACKEND_SETTING_CELERY_BROKER_URL "redis://broker:6379/1"
 ENV BACKEND_SETTING_CACHES '{"default":{"LOCATION":"redis://broker:6379/2"}}'
-ENV BACKEND_SETTING_ALLOWED_HOSTS '["localhost"]'
+ENV BACKEND_SETTING_ALLOWED_HOSTS ''
 ENV BACKEND_SETTING_CHANNEL_LAYERS '{ "default": { "CONFIG": { "hosts": [{"address": "redis://broker:6379/3"}] }}}'
 
-RUN pip install --no-cache-dir poetry==2.1.2 
+
+RUN apt-get update \
+    && apt-get install tidy>=5.6.0 --no-install-recommends -y \
+    && pip install --no-cache-dir poetry==2.1.2 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY poetry.lock pyproject.toml ./
 COPY README.md Makefile ./

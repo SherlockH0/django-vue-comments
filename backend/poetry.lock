@@ -515,6 +515,22 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-cors-headers"
+version = "4.7.0"
+description = "django-cors-headers is a Django application for handling the server headers required for Cross-Origin Resource Sharing (CORS)."
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "django_cors_headers-4.7.0-py3-none-any.whl", hash = "sha256:f1c125dcd58479fe7a67fe2499c16ee38b81b397463cf025f0e2c42937421070"},
+    {file = "django_cors_headers-4.7.0.tar.gz", hash = "sha256:6fdf31bf9c6d6448ba09ef57157db2268d515d94fc5c89a0a1028e1fc03ee52b"},
+]
+
+[package.dependencies]
+asgiref = ">=3.6"
+django = ">=4.2"
+
+[[package]]
 name = "django-filter"
 version = "25.1"
 description = "Django-filter is a reusable Django application for allowing users to filter querysets dynamically."
@@ -528,6 +544,20 @@ files = [
 
 [package.dependencies]
 Django = ">=4.2"
+
+[[package]]
+name = "django-ranged-response"
+version = "0.2.0"
+description = "Modified Django FileResponse that adds Content-Range headers."
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "django-ranged-response-0.2.0.tar.gz", hash = "sha256:f71fff352a37316b9bead717fc76e4ddd6c9b99c4680cdf4783b9755af1cf985"},
+]
+
+[package.dependencies]
+django = "*"
 
 [[package]]
 name = "django-redis"
@@ -547,6 +577,26 @@ redis = ">=3,<4.0.0 || >4.0.0,<4.0.1 || >4.0.1"
 
 [package.extras]
 hiredis = ["redis[hiredis] (>=3,!=4.0.0,!=4.0.1)"]
+
+[[package]]
+name = "django-simple-captcha"
+version = "0.6.2"
+description = "A very simple, yet powerful, Django captcha application"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "django_simple_captcha-0.6.2-py2.py3-none-any.whl", hash = "sha256:f5b7eee6bfeba6c55b47f2f8414557d5609fc29c4758da2c91ba9a91d6ac349d"},
+    {file = "django_simple_captcha-0.6.2.tar.gz", hash = "sha256:24db2bd1386c1833618465862e3518d310246d88f5e7f3bec23a5bda768ef834"},
+]
+
+[package.dependencies]
+Django = ">=4.2"
+django-ranged-response = "0.2.0"
+Pillow = ">=6.2.0"
+
+[package.extras]
+test = ["testfixtures"]
 
 [[package]]
 name = "django-split-settings"
@@ -1301,6 +1351,17 @@ files = [
 ]
 
 [[package]]
+name = "pytidylib"
+version = "0.3.2"
+description = "Python wrapper for HTML Tidy (tidylib) on Python 2 and 3"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "pytidylib-0.3.2.tar.gz", hash = "sha256:22b1c8d75970d8064ff999c2369e98af1d0685417eda4c829a5c9f56764b0af3"},
+]
+
+[[package]]
 name = "pyyaml"
 version = "6.0.2"
 description = "YAML parser and emitter for Python"
@@ -1645,4 +1706,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<4.0"
-content-hash = "e712b5122e4ac48f400d92ebc59c8d97e2562a5cfef57194b6a597f7db4611cd"
+content-hash = "fa43954d93e5c3ec444aa6c7b1a09131f9400bad79c2e6e7ff7266fcbfbf1bf8"

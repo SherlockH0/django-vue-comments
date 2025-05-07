@@ -1,11 +1,15 @@
+import logging
 from typing import Any, Literal, TypedDict
 
 from asgiref.typing import WebSocketScope
 from channels.consumer import database_sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.layers import BaseChannelLayer
+from rest_framework import serializers
 
 from .services import create_comment
+
+logger = logging.getLogger(__name__)
 
 
 class UrlRoute(TypedDict):
@@ -17,7 +21,7 @@ class ChannelsWebSocketScope(WebSocketScope):
     url_route: UrlRoute
 
 
-class ChatMessage(TypedDict):
+class Event(TypedDict):
     type: Literal["comments.comment"]
     comment: dict[str, Any]
 
@@ -41,14 +45,19 @@ class CommentsConsumer(AsyncJsonWebsocketConsumer):
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
     async def receive_json(self, content: Message, **kwargs: Any) -> None:
-        data = await database_sync_to_async(create_comment)(content["comment"])
+        try:
+            data = await database_sync_to_async(create_comment)(content["comment"])
 
-        message: ChatMessage = {
-            "type": "comments.comment",
-            "comment": data,
-        }
+            message: Event = {
+                "type": "comments.comment",
+                "comment": data,
+            }
 
-        await self.channel_layer.group_send(self.room_group_name, message)
+            await self.channel_layer.group_send(self.room_group_name, message)
+        except serializers.ValidationError as error:
+            await self.send_json(content={"type": "error", "body": error.detail})
+        except Exception as error:
+            logger.error(error)
 
-    async def comments_comment(self, event: ChatMessage) -> None:
-        await self.send_json(content=event["comment"])
+    async def comments_comment(self, event: Event) -> None:
+        await self.send_json(content={"type": "comment", "body": event["comment"]})

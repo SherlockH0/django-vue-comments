@@ -13,6 +13,18 @@ export interface CommentObject {
   } | null;
   children: CommentObject[];
 }
+
+export type CommentEvent = {
+  type: "comment";
+  body: CommentObject;
+};
+type FormErrorEvent = {
+  type: "error";
+  body: {
+    error: string;
+  };
+};
+export type SocketEvent = CommentEvent | FormErrorEvent;
 export interface CommentRequest {
   username: string;
   email: string;
@@ -20,6 +32,8 @@ export interface CommentRequest {
   homepage?: string;
   parent?: number;
   attachment: File | null;
+  captcha_code: string;
+  captcha_hashkey: string;
 }
 
 export type ToastEvent = {

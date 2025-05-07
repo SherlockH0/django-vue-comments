@@ -7,6 +7,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("comments/", include("backend.comments.urls")),
     path("attachments/", include("backend.attachments.urls")),
+    path("captcha/", include("captcha.urls")),
 ]
 
 if settings.DEBUG:
