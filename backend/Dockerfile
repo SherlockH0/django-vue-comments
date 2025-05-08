@@ -30,7 +30,7 @@ COPY README.md Makefile ./
 RUN poetry install --without dev --no-root && rm -rf $POETRY_CACHE_DIR
 
 COPY backend backend
-
+COPY local local
 COPY scripts scripts
 
 RUN chmod a+x scripts/*
