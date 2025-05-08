@@ -8,10 +8,7 @@ UserModel = get_user_model()
 
 
 class Comment(models.Model):
-    username = models.CharField(max_length=100)
-    email = models.EmailField()
-
-    homepage = models.URLField(null=True, blank=True)
+    user = models.ForeignKey(UserModel, on_delete=models.CASCADE)
     text = models.TextField()
     attachment = models.ForeignKey(
         Attachment, on_delete=models.SET_NULL, null=True, blank=True

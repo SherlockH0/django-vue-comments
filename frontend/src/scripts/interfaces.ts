@@ -1,8 +1,10 @@
 export interface CommentObject {
   id: number;
   parent: number | null;
-  username: string;
-  email: string;
+  user: {
+    username: string;
+    email: string;
+  };
   text: string;
   datetime_created: string;
   datetime_edited: string;
@@ -18,23 +20,22 @@ export type CommentMessage = {
   type: "comment";
   body: CommentObject;
 };
+
 export interface FormErrors {
-  username: string[];
-  email: string[];
-  text: string[];
-  captcha: string[];
-  homepage: string[];
+  text?: string[];
+  captcha?: string[];
+  attachment?: string[];
 }
+
 type FormErrorMessage = {
   type: "error";
   body: FormErrors;
 };
+
 export type SocketMessage = CommentMessage | FormErrorMessage;
+
 export interface CommentRequest {
-  username: string;
-  email: string;
   text: string;
-  homepage?: string;
   parent?: number;
   attachment: File | null;
   captcha_code: string;
@@ -58,7 +59,7 @@ export type Events = {
 };
 
 export interface FilterInterface {
-  name: "username" | "email" | "datetime_created";
+  name: string;
   display: string;
   active: boolean;
 }

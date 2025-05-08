@@ -5,6 +5,7 @@ from asgiref.typing import WebSocketScope
 from channels.consumer import database_sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.layers import BaseChannelLayer
+from django.contrib.auth.models import AbstractUser
 from rest_framework import serializers
 
 from .services import create_comment
@@ -19,6 +20,7 @@ class UrlRoute(TypedDict):
 
 class ChannelsWebSocketScope(WebSocketScope):
     url_route: UrlRoute
+    user: AbstractUser
 
 
 class Event(TypedDict):
@@ -46,7 +48,9 @@ class CommentsConsumer(AsyncJsonWebsocketConsumer):
 
     async def receive_json(self, content: Message, **kwargs: Any) -> None:
         try:
-            data = await database_sync_to_async(create_comment)(content["comment"])
+            data = await database_sync_to_async(create_comment)(
+                self.scope["user"], content["comment"]
+            )
 
             message: Event = {
                 "type": "comments.comment",

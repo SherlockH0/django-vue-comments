@@ -1,5 +1,6 @@
 """Core Django settings (no third party settings)."""
 
+AUTH_USER_MODEL = "users.User"
 ALLOWED_HOSTS = ["localhost"]
 CORS_ALLOWED_ORIGINS = ["http://localhost"]
 DEBUG = False
@@ -14,12 +15,15 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # Third party apps
     "captcha",
     "corsheaders",
     "rest_framework",
     "django_filters",
+    # Project apps
     "backend.comments",
     "backend.attachments",
+    "backend.users",
 ]
 
 

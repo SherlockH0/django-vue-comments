@@ -5,7 +5,7 @@
       name="attachment"
       type="file"
       class="file-input join-item w-full"
-      :class="{ 'input-error': fileErrors }"
+      :class="{ 'input-error': formErrors?.attachment }"
       ref="input"
       @change="changeFile"
       accept="image/png, image/jpeg, image/gif, text/plain"
@@ -32,27 +32,20 @@
       </svg>
     </button>
   </div>
-  <p v-if="fileErrors" class="text-error block mt-2 text-xs">
-    <template v-for="error in fileErrors">
+  <p v-if="formErrors?.attachment" class="text-error label">
+    <template v-for="error in formErrors.attachment">
       {{ error }}
       <br />
     </template>
   </p>
 </template>
 <script setup lang="ts">
+import type { FormErrors } from "../scripts/interfaces.ts";
 import { inject, useTemplateRef, watch } from "vue";
 
 const attachment = defineModel<File | null>();
-interface ErrorsInterface {
-  fileErrors: string[];
-  cleanFileErrors: Function;
-}
-const defalutErrors: ErrorsInterface = {
-  fileErrors: [],
-  cleanFileErrors: () => {},
-};
-const { fileErrors, cleanFileErrors } =
-  inject<ErrorsInterface>("fileErrors") || defalutErrors;
+
+const formErrors = inject<FormErrors>("formErrors") || {};
 
 watch(attachment, (newValue, oldValue) => {
   if (oldValue != null && !newValue) {
@@ -64,13 +57,11 @@ function cleanFile() {
   if (fileInput.value?.files) {
     fileInput.value.value = "";
     attachment.value = null;
-    cleanFileErrors();
   }
 }
 
 function changeFile() {
   attachment.value = fileInput.value?.files?.[0] || null;
-  cleanFileErrors();
 }
 const fileInput = useTemplateRef("input");
 </script>

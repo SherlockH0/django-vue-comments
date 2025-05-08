@@ -1,5 +1,5 @@
 <template>
-  <div class="flex w-full gap-4">
+  <div class="flex gap-4">
     <div class="flex items-center font-bold">Sort by:</div>
     <Filter
       v-for="filter in filters"
@@ -30,8 +30,8 @@ function toggleFilters(f: FilterInterface) {
 }
 
 const filters = ref<FilterInterface[]>([
-  { display: "Username", name: "username", active: false },
-  { display: "Email", name: "email", active: false },
+  { display: "Username", name: "user__username", active: false },
+  { display: "Email", name: "user__email", active: false },
   { display: "Date", name: "datetime_created", active: false },
 ]);
 

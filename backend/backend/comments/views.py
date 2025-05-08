@@ -31,8 +31,8 @@ class CommentListView(ListAPIView):
     serializer_class = CommentDisplaySerializer
     filter_backends = (OrderingFilter, DjangoFilterBackend)
     pagination_class = CustomPagination
-    filterset_fields = ("username", "email", "datetime_created")
-    ordering_fields = ("username", "email", "datetime_created")
+    filterset_fields = ("user__username", "user__email", "datetime_created")
+    ordering_fields = ("user__username", "user__email", "datetime_created")
 
     @method_decorator(
         cache_page(settings.COMMENT_LIST_CACHE_TIME, key_prefix="comment_list")

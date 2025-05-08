@@ -8,38 +8,12 @@
           </legend>
           <legend class="fieldset-legend text-lg" v-else>
             <span>
-              Reply to <i>{{ parent.username }}</i>
+              Reply to <i>{{ parent.user.username }}</i>
             </span>
           </legend>
           <p v-if="parent" v-html="parent.text" class="truncate"></p>
 
-          <Input
-            type="text"
-            name="username"
-            placeholder="Username"
-            required
-            :errors="formErrors.username"
-            v-model="data.username"
-          />
-
-          <Input
-            type="email"
-            placeholder="example@example.com"
-            name="email"
-            required
-            :errors="formErrors.email"
-            v-model="data.email"
-          />
-
-          <Input
-            type="url"
-            placeholder="https://"
-            name="homepage"
-            :errors="formErrors.homepage"
-            v-model="data.homepage"
-          />
-
-          <Textarea :errors="formErrors.text" v-model="data.text" />
+          <Textarea :errors="formErrors?.text || []" v-model="data.text" />
 
           <FileInput v-model="data.attachment" />
 
@@ -52,7 +26,7 @@
                 name="captcha"
                 placeholder="Enter text you see on the image"
                 v-model="data.captcha_code"
-                :class="{ 'input-error': formErrors.captcha.length }"
+                :class="{ 'input-error': (formErrors?.captcha || []).length }"
                 required
                 class="input join-item"
               />
@@ -75,7 +49,7 @@
               </button>
             </div>
           </div>
-          <p v-if="formErrors.captcha.length" class="text-error label">
+          <p v-if="formErrors?.captcha" class="text-error label">
             <template v-for="error in formErrors.captcha">
               {{ error }}<br />
             </template>
@@ -96,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { BACKEND_URL } from "../scripts/config";
+import api from "../scripts/api.ts";
 import { emitter } from "../scripts/events";
 import type {
   CommentObject,
@@ -104,7 +78,6 @@ import type {
   FormErrors,
 } from "../scripts/interfaces";
 import FileInput from "./FileInput.vue";
-import Input from "./Input.vue";
 import Textarea from "./Textarea.vue";
 import { inject, reactive, ref, useTemplateRef, watch } from "vue";
 
@@ -114,9 +87,7 @@ const parent = ref<CommentObject | null>(null);
 const captcha = ref<{ key: string; image_url: string }>();
 
 const data = reactive<CommentRequest>({
-  username: "Gandalf",
-  email: "gandalf@gmail.com",
-  text: "You shall not pass!!!",
+  text: "",
   attachment: null,
   captcha_code: "",
   captcha_hashkey: "",
@@ -127,11 +98,8 @@ function send() {
 }
 
 const defaultErrors = {
-  username: [],
-  email: [],
   text: [],
   captcha: [],
-  homepage: [],
 };
 const formErrors = inject<FormErrors>("formErrors") || defaultErrors;
 
@@ -157,10 +125,15 @@ defineExpose({
 });
 
 async function getCaptcha() {
-  const response = await fetch(`${BACKEND_URL}/api/comments/captcha/`);
-  const json = await response.json();
-  captcha.value = json;
-  data.captcha_hashkey = json.key;
+  api
+    .get("/api/comments/captcha/")
+    .then((response) => {
+      captcha.value = response.data;
+      data.captcha_hashkey = response.data.key;
+    })
+    .catch((error) => {
+      emitter.emit("toast", { type: "error", message: error.message });
+    });
 }
 getCaptcha();
 </script>

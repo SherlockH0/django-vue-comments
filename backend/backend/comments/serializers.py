@@ -6,9 +6,12 @@ import bleach
 import tidylib
 from captcha.serializers import CaptchaModelSerializer
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from backend.comments.models import Comment
+
+User = get_user_model()
 
 
 class BaseCommentSerializer(serializers.ModelSerializer):
@@ -17,8 +20,7 @@ class BaseCommentSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "parent",
-            "username",
-            "email",
+            "user",
             "text",
             "attachment",
         )
@@ -67,9 +69,16 @@ class AttachmentField(serializers.RelatedField):
         }
 
 
+class CommentUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("username", "email")
+
+
 class CommentDisplaySerializer(BaseCommentSerializer):
     attachment = AttachmentField(read_only=True)
     children = ChildrenListingField(many=True, read_only=True)
+    user = CommentUserSerializer(read_only=True)
 
     class Meta:
         model = Comment

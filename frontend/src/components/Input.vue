@@ -1,20 +1,20 @@
 <template>
-  <label class="label capitalize" :for="attrs.name">{{ attrs.name }}</label>
+  <label class="label capitalize">{{ attrs.name }}</label>
   <input
-    class="input"
+    class="input w-full"
     v-bind="attrs"
     v-model="value"
-    :class="{ 'input-error': errors.length }"
+    :class="{ 'input-error': errors?.length || false }"
   />
-  <p v-if="errors.length" class="label text-error">
+  <p v-if="errors?.length || false" class="label text-error">
     <template v-for="error in errors"> {{ error }}<br /> </template>
   </p>
 </template>
 <script setup lang="ts">
 import { useAttrs } from "vue";
 
-const props = defineProps<{
-  errors: string[];
+defineProps<{
+  errors?: string[];
 }>();
 
 const attrs = useAttrs();

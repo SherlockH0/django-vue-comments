@@ -3,8 +3,8 @@
     <div
       class="bg-neutral text-neutral-content mb-2 flex items-center gap-4 rounded-xl p-2 px-3"
     >
-      <div class="font-bold">{{ data.username }}</div>
-      <div class="italic">{{ data.email }}</div>
+      <div class="font-bold">{{ data.user.username }}</div>
+      <div class="italic">{{ data.user.email }}</div>
       <div class="text-xs">
         {{ date }}
       </div>

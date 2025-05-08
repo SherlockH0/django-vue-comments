@@ -1,85 +1,28 @@
 <template>
-  <label class="label" for="text">Text</label>
   <div class="join">
     <button type="button" @click="insertTag('i')" class="btn btn-sm join-item">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="1rem"
-        height="1rem"
-        viewBox="0 0 24 24"
-      >
-        <path
-          fill="none"
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M8 19h2m0 0h2m-2 0l4-14m-2 0h2m0 0h2"
-        />
-      </svg>
+      <Icon icon="ci:italic" width="1rem" height="1rem" />
     </button>
     <button
       type="button"
       @click="insertTag('strong')"
       class="btn btn-sm join-item"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="1rem"
-        height="1rem"
-        viewBox="0 0 24 24"
-      >
-        <path
-          fill="none"
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M8 12h4.5M8 12V5h4.5a3.5 3.5 0 1 1 0 7M8 12v7h5.5a3.5 3.5 0 1 0 0-7h-1"
-        />
-      </svg>
+      <Icon icon="ci:bold" width="1rem" height="1rem" />
     </button>
     <button
       type="button"
       @click="insertTag('code')"
       class="btn btn-sm join-item"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="1rem"
-        height="1rem"
-        viewBox="0 0 24 24"
-      >
-        <path
-          fill="none"
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="m15 7l5 5l-5 5m-6 0l-5-5l5-5"
-        />
-      </svg>
+      <Icon icon="ci:code" width="1rem" height="1rem" />
     </button>
     <button
       type="button"
       @click="insertTag('a', ' href=\'\' title=\'\'')"
       class="btn btn-sm join-item"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="1rem"
-        height="1rem"
-        viewBox="0 0 24 24"
-      >
-        <path
-          fill="none"
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M8 12h8m-1-4h2a4 4 0 0 1 0 8h-2M9 8H7a4 4 0 1 0 0 8h2"
-        />
-      </svg>
+      <Icon icon="ci:link" width="1rem" height="1rem" />
     </button>
   </div>
   <textarea
@@ -93,9 +36,10 @@
   ></textarea>
 </template>
 <script setup lang="ts">
+import { Icon } from "@iconify/vue";
 import { useTemplateRef, nextTick } from "vue";
 
-const props = defineProps<{
+defineProps<{
   errors: string[];
 }>();
 
