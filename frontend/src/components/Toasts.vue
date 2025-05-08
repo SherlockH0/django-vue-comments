@@ -3,7 +3,8 @@
     <div
       v-for="toast in toasts"
       class="alert"
-      :class="`alert-${toast.event.type}`"
+      role="alert"
+      :class="classes[toast.event.type]"
       @click="removeToast(toast.id)"
     >
       <span>{{ toast.event.message }}</span>
@@ -16,6 +17,13 @@ import type { ToastEvent } from "../scripts/interfaces";
 import { ref } from "vue";
 
 const toasts = ref<Array<{ id: number; event: ToastEvent }>>([]);
+
+const classes = {
+  info: "alert-error",
+  success: "alert-error",
+  warning: "alert-error",
+  error: "alert-error",
+};
 
 emitter.on("toast", (event) => {
   const id = Math.random() * 1000;

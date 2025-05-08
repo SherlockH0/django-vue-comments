@@ -3,14 +3,14 @@
     <fieldset
       class="fieldset bg-base-200 border-base-300 rounded-box border p-4"
     >
-      <p class="label text-error" v-if="errors.detail">{{ errors.detail }}</p>
+      <p class="label text-error" v-if="errors?.detail">{{ errors?.detail }}</p>
       <Input
         type="text"
         required
         placeholder="Username"
         v-model="username"
         name="username"
-        :errors="errors.username || []"
+        :errors="errors?.username || []"
       />
       <Input
         type="email"
@@ -19,7 +19,7 @@
         placeholder="Email"
         v-model="email"
         name="email"
-        :errors="errors.email || []"
+        :errors="errors?.email || []"
       />
 
       <Input
@@ -28,7 +28,7 @@
         placeholder="Password"
         v-model="password"
         name="password"
-        :errors="errors.password || []"
+        :errors="errors?.password || []"
       />
 
       <button class="btn btn-neutral mt-4">Register</button>
@@ -77,7 +77,11 @@ function submit() {
         });
     })
     .catch((error) => {
-      errors.value = error.response.data;
+      if (error.response) {
+        errors.value = error.response.data;
+      } else {
+        emitter.emit("toast", { type: "error", message: error });
+      }
     })
     .finally(() => {
       loading.value = false;

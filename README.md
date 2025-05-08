@@ -1,4 +1,5 @@
 # django-vue-comments 💬
+
 Comments SPR with Django on backend and Vue on frontend
 
 ##### Table of Contents
@@ -18,6 +19,7 @@ Comments SPR with Django on backend and Vue on frontend
 ## Tech Stack
 
 ### Frontend
+
 - 🌐 [Django](https://www.djangoproject.com/)
 - 🥷 [Dajngo REST Framework](https://www.django-rest-framework.org/)
 - ⏲️ [Django Channels](https://channels.readthedocs.io/en/latest/)
@@ -39,7 +41,7 @@ Make sure you have [Docker](https://www.docker.com/) installed on your system.
 Create local settings files:
 
 ```bash
-mkdir -p local
+mkdir -p backend/local
 cp blogapi/project/settings/templates/settings.prod.py ./local/settings.prod.py
 ```
 
