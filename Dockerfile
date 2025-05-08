@@ -1,7 +1,5 @@
 FROM node:23-alpine3.20 AS frontend
 
-ENV NODE_ENV=production
-
 WORKDIR /usr/src/app
 
 COPY ./frontend/package*.json ./frontend/package-lock.json ./
