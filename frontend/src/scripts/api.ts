@@ -32,11 +32,14 @@ api.interceptors.response.use(
 );
 
 export async function refreshToken() {
-  const refreshToken = localStorage.getItem(REFRESH_TOKEN);
-
+  const token = localStorage.getItem(REFRESH_TOKEN);
+  if (!token) {
+    isAuthenticated.value = false;
+    return Promise.reject("No refresh token.");
+  }
   return axios
     .post(`${BACKEND_URL}/api/token/refresh/`, {
-      refresh: refreshToken,
+      refresh: token,
     })
     .then((response) => {
       localStorage.setItem(ACCESS_TOKEN, response.data.access);
