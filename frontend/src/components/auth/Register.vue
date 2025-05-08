@@ -40,7 +40,7 @@
 import Input from "../Input.vue";
 import { isAuthenticated } from "@/scripts/api.ts";
 import { BACKEND_URL, REFRESH_TOKEN, ACCESS_TOKEN } from "@/scripts/config.ts";
-import { loading } from "@/scripts/events.ts";
+import { emitter, loading } from "@/scripts/events.ts";
 import axios from "axios";
 import { ref } from "vue";
 
