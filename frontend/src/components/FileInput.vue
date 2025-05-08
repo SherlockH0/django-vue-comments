@@ -1,40 +1,5 @@
-<script setup lang="ts">
-import { inject, useTemplateRef, watch } from "vue";
-
-const attachment = defineModel<File | null>();
-interface ErrorsInterface {
-  fileErrors: string[];
-  cleanFileErrors: Function;
-}
-const defalutErrors: ErrorsInterface = {
-  fileErrors: [],
-  cleanFileErrors: () => {},
-};
-const { fileErrors, cleanFileErrors } =
-  inject<ErrorsInterface>("fileErrors") || defalutErrors;
-
-watch(attachment, (newValue, oldValue) => {
-  if (oldValue != null && !newValue) {
-    cleanFile();
-  }
-});
-
-function cleanFile() {
-  if (fileInput.value?.files) {
-    fileInput.value.value = "";
-    attachment.value = null;
-    cleanFileErrors();
-  }
-}
-
-function changeFile() {
-  attachment.value = fileInput.value?.files?.[0] || null;
-  cleanFileErrors();
-}
-const fileInput = useTemplateRef("input");
-</script>
-
 <template>
+  <label for="attachment" class="label">Attachment</label>
   <div class="join">
     <input
       name="attachment"
@@ -74,3 +39,38 @@ const fileInput = useTemplateRef("input");
     </template>
   </p>
 </template>
+<script setup lang="ts">
+import { inject, useTemplateRef, watch } from "vue";
+
+const attachment = defineModel<File | null>();
+interface ErrorsInterface {
+  fileErrors: string[];
+  cleanFileErrors: Function;
+}
+const defalutErrors: ErrorsInterface = {
+  fileErrors: [],
+  cleanFileErrors: () => {},
+};
+const { fileErrors, cleanFileErrors } =
+  inject<ErrorsInterface>("fileErrors") || defalutErrors;
+
+watch(attachment, (newValue, oldValue) => {
+  if (oldValue != null && !newValue) {
+    cleanFile();
+  }
+});
+
+function cleanFile() {
+  if (fileInput.value?.files) {
+    fileInput.value.value = "";
+    attachment.value = null;
+    cleanFileErrors();
+  }
+}
+
+function changeFile() {
+  attachment.value = fileInput.value?.files?.[0] || null;
+  cleanFileErrors();
+}
+const fileInput = useTemplateRef("input");
+</script>

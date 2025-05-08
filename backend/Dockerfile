@@ -12,11 +12,11 @@ ENV POETRY_VIRTUALENVS_CREATE=1
 ENV POETRY_CACHE_DIR=/tmp/poetry_cache
 
 ENV BACKEND_SETTING_DATABASES '{"default":{"HOST":"db"}}'
-ENV BACKEND_SETTING_LOCAL_SETTINGS_PATH "local/settings.dev.py"
 ENV BACKEND_SETTING_CELERY_BROKER_URL "redis://broker:6379/1"
 ENV BACKEND_SETTING_CACHES '{"default":{"LOCATION":"redis://broker:6379/2"}}'
-ENV BACKEND_SETTING_ALLOWED_HOSTS ''
-ENV BACKEND_SETTING_CHANNEL_LAYERS '{ "default": { "CONFIG": { "hosts": [{"address": "redis://broker:6379/3"}] }}}'
+ENV BACKEND_SETTING_CHANNEL_LAYERS '{"default":{"CONFIG":{"hosts":[{"address":"redis://broker:6379/3"}]}}}'
+
+ENV BACKEND_SETTING_WEBSITE_ROOT 'http://localhost/backend'
 
 
 RUN apt-get update \

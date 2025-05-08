@@ -1,33 +1,5 @@
-<script setup lang="ts">
-import { useTemplateRef, nextTick } from "vue";
-
-const text = defineModel({ default: "" });
-const textarea = useTemplateRef("textarea");
-
-function insertTag(tag: string, extra: string = "") {
-  const el = textarea.value;
-
-  if (!el) return;
-
-  const start = el.selectionStart;
-  const end = el.selectionEnd;
-
-  const before = text.value.substring(0, start);
-  const selected = text.value.substring(start, end);
-  const after = text.value.substring(end);
-
-  const opening = `<${tag}${extra}>`;
-  const closing = `</${tag}>`;
-
-  text.value = before + opening + selected + closing + after;
-
-  nextTick(() => {
-    el.focus();
-    el.setSelectionRange(start + opening.length, end + opening.length);
-  });
-}
-</script>
 <template>
+  <label class="label" for="text">Text</label>
   <div class="join">
     <button type="button" @click="insertTag('i')" class="btn btn-sm join-item">
       <svg
@@ -112,6 +84,7 @@ function insertTag(tag: string, extra: string = "") {
   </div>
   <textarea
     class="join-item textarea w-full"
+    :class="{ 'input-error': errors.length }"
     name="text"
     placeholder="Start typing..."
     required
@@ -119,3 +92,36 @@ function insertTag(tag: string, extra: string = "") {
     v-model="text"
   ></textarea>
 </template>
+<script setup lang="ts">
+import { useTemplateRef, nextTick } from "vue";
+
+const props = defineProps<{
+  errors: string[];
+}>();
+
+const text = defineModel({ default: "" });
+const textarea = useTemplateRef("textarea");
+
+function insertTag(tag: string, extra: string = "") {
+  const el = textarea.value;
+
+  if (!el) return;
+
+  const start = el.selectionStart;
+  const end = el.selectionEnd;
+
+  const before = text.value.substring(0, start);
+  const selected = text.value.substring(start, end);
+  const after = text.value.substring(end);
+
+  const opening = `<${tag}${extra}>`;
+  const closing = `</${tag}>`;
+
+  text.value = before + opening + selected + closing + after;
+
+  nextTick(() => {
+    el.focus();
+    el.setSelectionRange(start + opening.length, end + opening.length);
+  });
+}
+</script>

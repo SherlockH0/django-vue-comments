@@ -1,3 +1,15 @@
+<template>
+  <div class="flex w-full gap-4">
+    <div class="flex items-center font-bold">Sort by:</div>
+    <Filter
+      v-for="filter in filters"
+      :display="filter.display"
+      v-model:active="filter.active"
+      v-model:reversed="reversed"
+      @activate="toggleFilters(filter)"
+    />
+  </div>
+</template>
 <script setup lang="ts">
 import type { FilterInterface } from "../scripts/interfaces";
 import Filter from "./Filter.vue";
@@ -31,15 +43,3 @@ watchEffect(() => {
   );
 });
 </script>
-<template>
-  <div class="flex w-full gap-4">
-    <div class="flex items-center font-bold">Sort by:</div>
-    <Filter
-      v-for="filter in filters"
-      :display="filter.display"
-      v-model:active="filter.active"
-      v-model:reversed="reversed"
-      @activate="toggleFilters(filter)"
-    />
-  </div>
-</template>

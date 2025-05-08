@@ -1,3 +1,8 @@
+<template>
+  <button @click="handleClick">
+    <slot></slot>
+  </button>
+</template>
 <script setup lang="ts">
 import { emitter } from "../scripts/events";
 import type { CommentObject } from "../scripts/interfaces";
@@ -10,8 +15,3 @@ function handleClick() {
   emitter.emit("new_comment", { parent: props.parent });
 }
 </script>
-<template>
-  <button @click="handleClick">
-    <slot></slot>
-  </button>
-</template>

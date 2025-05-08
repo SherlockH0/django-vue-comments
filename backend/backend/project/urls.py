@@ -5,9 +5,9 @@ from django.urls import include, path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("comments/", include("backend.comments.urls")),
-    path("attachments/", include("backend.attachments.urls")),
-    path("captcha/", include("captcha.urls")),
+    path("api/comments/", include("backend.comments.urls")),
+    path("api/attachments/", include("backend.attachments.urls")),
+    path("api/captcha/", include("captcha.urls")),
 ]
 
 if settings.DEBUG:

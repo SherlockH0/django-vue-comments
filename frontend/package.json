@@ -21,8 +21,10 @@
     "vue-easy-lightbox": "^1.19.0"
   },
   "devDependencies": {
+    "@iconify/vue": "^5.0.0",
     "@vitejs/plugin-vue": "^5.2.2",
     "@vue/tsconfig": "^0.7.0",
+    "@vue/typescript-plugin": "^2.2.10",
     "typescript": "~5.7.2",
     "vite": "^6.3.1",
     "vue-tsc": "^2.2.8"

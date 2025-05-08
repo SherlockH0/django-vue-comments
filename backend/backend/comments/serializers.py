@@ -25,7 +25,6 @@ class BaseCommentSerializer(serializers.ModelSerializer):
 
     def validate_text(self, value: str):
         html = value.replace("\n", "<br>")
-        print(html)
         tidy_html, _ = tidylib.tidy_fragment(html)
         clean_html = bleach.clean(tidy_html, tags=settings.ALLOWED_TAGS, strip=True)
         return clean_html
@@ -44,6 +43,14 @@ class ComentCreateSerializer(CaptchaModelSerializer, BaseCommentSerializer):
         validated_data.pop("captcha_hashkey")
         return super().create(validated_data)
 
+    def is_valid(self, *args, **kwargs) -> bool:
+        try:
+            return super().is_valid(*args, **kwargs)
+        except serializers.ValidationError as e:
+            if "CAPTCHA" in str(e):
+                raise serializers.ValidationError({"captcha": [e.detail["error"]]})
+            raise e
+
 
 class ChildrenListingField(serializers.RelatedField):
     def to_representation(self, value):
@@ -52,9 +59,9 @@ class ChildrenListingField(serializers.RelatedField):
 
 class AttachmentField(serializers.RelatedField):
     def to_representation(self, value):
-        website_uri = settings.WEBSITE_URI
+        website_root = settings.WEBSITE_ROOT
         return {
-            "url": website_uri + value.file.url,
+            "url": website_root + value.file.url,
             "image": value.is_image,
             "name": os.path.basename(value.file.name),
         }
