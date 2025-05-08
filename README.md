@@ -97,5 +97,3 @@ To access protected routes, add a `Authorization` header into your request:
 ```
 Authorization: Bearer <token>
 ```
-
-## Known Issues
