@@ -7,26 +7,51 @@ Comments SPR with Django on backend and Vue on frontend
 - [Demo](#demo)
 - [Tech Stack](#tech-stack)
 - [Usage](#usage)
-  - [Launching the application in testing mode](#launching-the-application-in-testing-mode)
+  - [Run with docker](#run-with-docker)
   - [Development](#development-and-running-tests)
+- [Features](#features)
 - [API Docs](#api-docs)
   - [Authentication](#authentication)
 
-## Demo
-
-[![Watch the video](https://img.youtube.com/vi/MnOoMGSmVR8/maxresdefault.jpg)](https://youtu.be/MnOoMGSmVR8)
+<!-- ## Demo -->
+<!---->
+<!-- [![Watch the video]()](https://youtu.be/MnOoMGSmVR8) -->
 
 ## Tech Stack
 
+### Backend
+
+- [Django](https://www.djangoproject.com/)
+- [Dajngo REST Framework](https://www.django-rest-framework.org/)
+- [Celery](https://docs.celeryq.dev/en/stable/)
+- [Django Channels](https://channels.readthedocs.io/en/latest/)
+- [Redis](https://redis.io/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Poetry](https://python-poetry.org/)
+
 ### Frontend
 
-- 🌐 [Django](https://www.djangoproject.com/)
-- 🥷 [Dajngo REST Framework](https://www.django-rest-framework.org/)
-- ⏲️ [Django Channels](https://channels.readthedocs.io/en/latest/)
-- 🧪 [Pytest](https://docs.pytest.org/en/stable/getting-started.html)
-- 📦 [Docker](https://www.docker.com/)
+- [Vite](https://vite.dev/)
+- [Vue.js](https://vuejs.org/)
+- [axios](https://axios-http.com/)
+- [daisyUI](https://daisyui.com/)
+
+### Hosting
+
+- [Docker](https://www.docker.com/)
+- [nginx](https://nginx.org/)
+
+## Features
+
+- Real-time comment updates via WebSockets.
+- JWT-based authentication.
+- Automatic resizing of large uploaded images.
+- CAPTCHA protection to prevent spam.
+- Dockerized setup for easy deployment.
 
 ## Usage
+
+### Run with docker
 
 Clone the repo, and `cd` into it:
 
@@ -35,14 +60,14 @@ git clone https://github.com/SherlockH0/django-vue-comments.git
 cd django-vue-comments
 ```
 
-Then, you can run the application using docker compose.
-Make sure you have [Docker](https://www.docker.com/) installed on your system.
+Then, you can run the application using `docker compose`.
 
 Create local settings files:
 
 ```bash
 mkdir -p backend/local
-cp blogapi/project/settings/templates/settings.prod.py ./local/settings.prod.py
+cp backend/backend/project/settings/templates/settings.prod.py ./backend/local/settings.prod.py
+cp frontend/env/.env.production.example frontend/.env.production
 ```
 
 Run the application:
@@ -53,191 +78,24 @@ docker compose up
 
 Application is now available on <http://localhost>
 
-### Development and running tests
+### Development
 
-Make sure you have [Docker](https://www.docker.com/) and [Python ^3.12](https://www.python.org/) installed on your system.
-I'm also using [Poetry](https://python-poetry.org/) as a dependency manager, so if you have it installed on your system, it would be a plus.
-
-Create local settings files:
-
-```bash
-mkdir -p local
-cp blogapi/project/settings/templates/settings.dev.py ./local/settings.dev.py
-cp blogapi/project/settings/templates/settings.unittest.py ./local/settings.unittest.py
-```
-
-And add set a google AI API key in both of them (`.dev` file is used for development, and `.unittest` is used for running tests) (you can omit this step, but the AI features won't work):
-
-```diff
-# /local/settings.dev.py or /local/settings.unittest.py
-- GOOGLE_AI_API_KEY = NotImplemented
-+ GOOGLE_AI_API_KEY = "djjnJIJIJhkh"
-```
-
-Create and activate virtual environment:
-
-```bash
-python -m venv venv
-# Linux, MacOS, Windows (WSL)
-source venv/bin/activate
-# Windows
-venv\Scripts\activate.bat
-```
-
-In a separate terminal window start PostgreSQL and Redis with docker:
-
-```bash
-docker-compose -f docker-compose.dev.yml up --force-recreate
-```
-
-Then, continue depending on your system:
-
-<details>
-<summary>With Makefile and Poetry (Linux, MacOS, Windows (WSL))</summary>
-
-Install the project using poetry, migrate the database, and create superuser (optional):
-
-```bash
-make install
-make migrate
-make superuser
-```
-
-Run local server:
-
-```bash
-make runserver
-```
-
-In a different terminal window, run rq worker and scheduler:
-
-```bash
-make rq
-make rqscheduler
-```
-
-To make migrations after changes in the models, run:
-
-```bash
-make migrations
-```
-
-To migrate, run:
-
-```bash
-make migrate
-```
-
-To run tests, run:
-
-```bash
-make test
-# With coverage
-make test-cov
-# With html coverage
-make test-cov-html
-```
-
-</details>
-<details>
-<summary>With Poetry (All systems with Poetry installed)</summary>
-
-Install the project using poetry, migrate the database, and create superuser (optional):
-
-```bash
-poetry install
-poetry run python -m blogapi.manage migrate
-poetry run python -m blogapi.manage createsuperuser
-```
-
-Run local server:
-
-```bash
-poetry run python -m blogapi.manage runserver
-```
-
-In a different terminal window, run rq worker and scheduler:
-
-```bash
-poetry run python -m blogapi.manage rqworker default
-poetry run python -m blogapi.manage rqscheduler
-```
-
-To make migrations after changes in the models, run:
-
-```bash
-poetry run python -m blogapi.manage makemigrations
-```
-
-To migrate, run:
-
-```bash
-poetry run python -m blogapi.manage migrate
-```
-
-To run tests, run:
-
-```bash
-poetry run pytest -v -rs
-# With coverage
-poetry run pytest -v -rs --cov
-# With html coverage
-poetry run pytest -v -rs --cov --cov-report html
-```
-
-</details>
-<details>
-<summary>With pip (All systems)</summary>
-
-Install the project using pip, migrate the database, and create superuser (optional):
-
-```bash
-pip install .
-python -m blogapi.manage migrate
-python -m blogapi.manage createsuperuser
-```
-
-Run local server:
-
-```bash
-python -m blogapi.manage runserver
-```
-
-In a different terminal window, run rq worker and scheduler:
-
-```bash
-python -m blogapi.manage rqworker default
-python -m blogapi.manage rqscheduler
-```
-
-To run tests, run:
-
-```bash
-pytest -v -rs
-# With coverage
-pytest -v -rs --cov
-# With html coverage
-pytest -v -rs --cov --cov-report html
-```
-
-</details>
+For development, see the [backend](backend/README.md) and [frontend](frontend/README.md) README's.
 
 ## API Docs
 
-Django-Ninja comes with an easy to use interactive API documentation. If you have launched the application, you can check it out on `localhost:8000/api/docs`.
-
-Django also comes with a featureful admin panel which you can use by visiting `localhost:8000/admin` (you have to create superuser to use it)
-
 ### Authentication
 
-Blog-API implements a simple JWT authentication.
+Application implements a simple JWT authentication.
 
-To create a user, make a `POST` request to the `/api/users` route.
+To create a user, make a `POST` request to the `/api/auth/register/` route.
 
-To log user in, obtain access and refresh tokens by making a `POST` request to the `api/token/pair` route.
+To log user in, obtain access and refresh tokens by making a `POST` request to the `api/token/` route.
 
 To access protected routes, add a `Authorization` header into your request:
 
 ```
 Authorization: Bearer <token>
 ```
+
+## Known Issues
