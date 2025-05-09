@@ -5,9 +5,9 @@ ALLOWED_MIMETYPES = ["image/png", "image/jpeg", "image/gif", "text/plain"]
 
 # Maximum file upload sizes (in bytes). e3 - KB, e6 - MB, e9 - GB
 ALLOWED_FILE_SIZES = {
-    "image/png": int(2.4e6),
-    "image/jpeg": int(2.4e6),
-    "image/gif": int(2.4e6),
+    "image/png": int(10e6),
+    "image/jpeg": int(10e6),
+    "image/gif": int(10e6),
     "text/plain": int(100e3),
 }
 POST_PROCESSORS = {

@@ -15,9 +15,7 @@ class OneTimeTokenMiddleware(BaseMiddleware):
 
     @database_sync_to_async
     def _authenticate(self, token: str) -> AbstractUser | None:
-
         user_pk = cache.get(f"otp_token.{token}")
-        print(user_pk, f"otp_token.{token}")
 
         try:
             user = User.objects.get(pk=user_pk)
