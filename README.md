@@ -1,6 +1,6 @@
 # django-vue-comments 💬
 
-Comments SPR with Django on backend and Vue on frontend
+Comments SPA with Django on backend and Vue on frontend
 
 ##### Table of Contents
 
