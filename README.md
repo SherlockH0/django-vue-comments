@@ -13,9 +13,9 @@ Comments SPA with Django on backend and Vue on frontend
 - [API Docs](#api-docs)
   - [Authentication](#authentication)
 
-<!-- ## Demo -->
-<!---->
-<!-- [![Watch the video]()](https://youtu.be/MnOoMGSmVR8) -->
+## Demo
+
+[![Watch the video]()](https://youtu.be/1riNIVjLtoM)
 
 ## Tech Stack
 
