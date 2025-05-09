@@ -15,7 +15,7 @@ Comments SPA with Django on backend and Vue on frontend
 
 ## Demo
 
-[![Watch the video]()](https://youtu.be/1riNIVjLtoM)
+[![Watch the video](https://img.youtube.com/vi/1riNIVjLtoM/maxresdefault.jpg)](https://youtu.be/1riNIVjLtoM)
 
 ## Tech Stack
 
