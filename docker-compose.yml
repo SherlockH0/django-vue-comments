@@ -7,8 +7,8 @@ services:
     ports:
       - 80:80
     depends_on:
-      - backend:
-          condition: service_healthy
+      backend:
+        condition: service_healthy
   backend:
     build: ./backend/
     command: ./scripts/run_django.sh
@@ -17,11 +17,11 @@ services:
     volumes:
       - media-data:/usr/src/app/media
     depends_on:
-      - db:
-          condition: service_healthy
-          restart: true
-      - broker:
-          condition: service_started
+      db:
+        condition: service_healthy
+        restart: true
+      broker:
+        condition: service_started
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://localhost:8000/"]
       start_period: 60s
@@ -34,8 +34,11 @@ services:
     volumes:
       - media-data:/usr/src/app/media
     depends_on:
-      - db
-      - broker
+      db:
+        condition: service_healthy
+        restart: true
+      broker:
+        condition: service_started
   db:
     image: postgres:17.4-alpine
     restart: unless-stopped
