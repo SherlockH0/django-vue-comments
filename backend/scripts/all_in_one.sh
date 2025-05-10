@@ -1,4 +1,8 @@
-scripts/run_celery.sh &
+#!/usr/bin/env sh
+
+set -e
+echo "Starting background celery..."
+poetry run celery -A backend.project worker -l INFO &
 
 echo "Running migrations..."
 poetry run python -m backend.manage migrate --no-input
