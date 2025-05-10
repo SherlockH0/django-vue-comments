@@ -62,12 +62,10 @@ cd django-vue-comments
 
 Then, you can run the application using `docker compose`.
 
-Create local settings files:
+Create local settings file:
 
 ```bash
-mkdir -p backend/local
-cp backend/backend/project/settings/templates/settings.prod.py ./backend/local/settings.prod.py
-cp frontend/env/.env.production.example frontend/.env.production
+cp config/.env.template .env
 ```
 
 Run the application:
