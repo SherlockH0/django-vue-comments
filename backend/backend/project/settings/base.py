@@ -5,7 +5,13 @@ from corsheaders.defaults import default_headers
 AUTH_USER_MODEL = "users.User"
 ALLOWED_HOSTS = ["localhost"]
 CORS_ALLOWED_ORIGINS = ["http://localhost"]
-CORS_ALLOW_HEADERS = [*default_headers, "cache-control", "pragma", "expires"]
+CORS_ALLOW_HEADERS = [
+    *default_headers,
+    "cache-control",
+    "pragma",
+    "expires",
+    "content-disposition",
+]
 DEBUG = False
 SECRET_KEY = NotImplemented
 
