@@ -7,6 +7,7 @@ COPY ./frontend/package*.json ./frontend/package-lock.json ./
 RUN npm install
 
 COPY ./frontend/ ./
+COPY .env ./
 
 RUN npm run build
 FROM nginx:stable-alpine AS nginx

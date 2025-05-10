@@ -11,6 +11,8 @@ services:
   backend:
     build: ./backend/
     command: ./scripts/run_django.sh
+    env_file:
+      - .env
     volumes:
       - media-data:/usr/src/app/media
     depends_on:
