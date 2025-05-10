@@ -4,7 +4,10 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
+from .views import home
+
 urlpatterns = [
+    path("", home, name="home"),
     path("admin/", admin.site.urls),
     path("api/comments/", include("backend.comments.urls")),
     path("api/attachments/", include("backend.attachments.urls")),
