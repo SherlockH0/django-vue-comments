@@ -10,6 +10,11 @@ services:
       backend:
         condition: service_healthy
   backend:
+    environment:
+      BACKEND_SETTING_DATABASES: '{"default":{"HOST":"db"}}'
+      BACKEND_SETTING_CELERY_BROKER_URL: "redis://broker:6379/1"
+      BACKEND_SETTING_CACHES: '{"default":{"LOCATION":"redis://broker:6379/2"}}'
+      BACKEND_SETTING_CHANNEL_LAYERS: '{"default":{"CONFIG":{"hosts":[{"address":"redis://broker:6379/3"}]}}}'
     build: ./backend/
     command: ./scripts/run_django.sh
     env_file:
