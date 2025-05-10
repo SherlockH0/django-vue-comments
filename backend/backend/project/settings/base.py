@@ -29,6 +29,8 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     "django_filters",
+    "cloudinary_storage",
+    "cloudinary",
     # Project apps
     "backend.comments",
     "backend.attachments",
@@ -112,7 +114,14 @@ USE_TZ = True
 STATIC_URL = "static/"
 
 MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "media"  # type: ignore
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.RawMediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
 
 
 # Default primary key field type

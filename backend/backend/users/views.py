@@ -22,7 +22,7 @@ class GetOTPView(APIView):
 
         key = f"otp_token.{token}"
 
-        cache.set(key, request.user.pk, timeout=settings.OPT_TOKEN_TIMEOUT)
+        cache.set(key, request.user.pk, timeout=settings.OTP_TOKEN_TIMEOUT)
         return Response({"token": token})
 
 

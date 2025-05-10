@@ -44,8 +44,8 @@ class CommentListView(ListAPIView):
 class CaptchaView(APIView):
     def get(self, request: Request):
         key = CaptchaStore.generate_key()
-        image_url = settings.WEBSITE_ROOT + reverse(
-            "captcha-image", kwargs={"key": key}
+        image_url = request.build_absolute_uri(
+            reverse("captcha-image", kwargs={"key": key})
         )
         return Response(
             {

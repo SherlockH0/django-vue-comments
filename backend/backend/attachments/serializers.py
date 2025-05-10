@@ -31,6 +31,7 @@ class UploadSerializer(serializers.ModelSerializer):
             if attrs["file"].size > settings.ALLOWED_FILE_SIZES[filetype]:
                 raise serializers.ValidationError({"detail": "File too large."})
 
+        attrs["file"].seek(0)
         attrs["filetype"] = filetype
         attrs["is_image"] = filetype.startswith("image")
         return attrs

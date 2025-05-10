@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Attachment(models.Model):
-    file = models.FileField(
+    file = models.ImageField(
         upload_to="uploads/%Y/%m/%d/",
         null=True,
         blank=True,

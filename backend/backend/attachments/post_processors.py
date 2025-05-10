@@ -38,7 +38,6 @@ class ImagePostProcessor(FilePostProcessor):
         Raises:
             ValueError: If the file is not a valid image.
         """
-        file.seek(0)
         try:
             image = Image.open(file)
         except UnidentifiedImageError:

@@ -21,5 +21,4 @@ ALLOWED_TAGS = {"a", "i", "strong", "code", "br"}
 MAX_IMAGE_DIMENSIONS = 320, 240
 COMMENT_LIST_CACHE_TIME = 60 * 15
 
-WEBSITE_ROOT = "http://localhost:8000"
-OPT_TOKEN_TIMEOUT = 60 * 2
+OTP_TOKEN_TIMEOUT = 60 * 2

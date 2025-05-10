@@ -20,6 +20,7 @@ include(
     "celery.py",
     "channels.py",
     "custom.py",
+    "cloudinary.py",
     optional(LOCAL_SETTINGS_PATH),
     "envvars.py",
 )

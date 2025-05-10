@@ -61,9 +61,8 @@ class ChildrenListingField(serializers.RelatedField):
 
 class AttachmentField(serializers.RelatedField):
     def to_representation(self, value):
-        website_root = settings.WEBSITE_ROOT
         return {
-            "url": website_root + value.file.url,
+            "url": value.file.url,
             "image": value.is_image,
             "name": os.path.basename(value.file.name),
         }
