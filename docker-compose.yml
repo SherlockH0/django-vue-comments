@@ -43,6 +43,8 @@ services:
       BACKEND_SETTING_CHANNEL_LAYERS: '{"default":{"CONFIG":{"hosts":[{"address":"redis://broker:6379/3"}]}}}'
     volumes:
       - media-data:/usr/src/app/media
+    env_file:
+      - .env
     depends_on:
       db:
         condition: service_healthy
